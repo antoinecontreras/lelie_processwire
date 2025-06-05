@@ -1,9 +1,5 @@
 # ProcessWire specific
-/site/assets/cache/**/*
-/site/assets/logs/**/*
-/site/assets/sessions/**/*
-/site/assets/backups/**/*
-/site/assets/files/**/*
+/site/assets/
 /site/config.php
 /site/config-dev.php
 wire
