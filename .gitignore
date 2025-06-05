@@ -1,0 +1,37 @@
+# ProcessWire specific
+/site/assets/cache/**/*
+/site/assets/logs/**/*
+/site/assets/sessions/**/*
+/site/assets/backups/**/*
+/site/assets/files/**/*
+/site/config.php
+/site/config-dev.php
+
+# IDE and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sublime-*
+
+# Node modules and package files
+/node_modules/
+package-lock.json
+
+# Compiled assets
+/site/templates/css/
+/site/templates/js/
+
+# Environment files
+.env
+.env.*
+
+# Temporary files
+*.log
+*.tmp
+*.swp
+*~
+
+# Composer
+/vendor/
+composer.lock
