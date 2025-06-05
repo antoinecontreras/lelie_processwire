@@ -1,5 +1,6 @@
 # ProcessWire specific
 /site/assets/
+/site/modules/
 /site/config.php
 /site/config-dev.php
 wire
