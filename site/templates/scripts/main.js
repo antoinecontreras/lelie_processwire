@@ -56,7 +56,7 @@ function ready(data) {
       const target = dom.pj.querySelector(
         `.projects .project#${"t" + CANVAS_LAYER.s.visualIndex}`
       );
-    console.log(CANVAS_LAYER.s.visualIndex);
+      console.log(CANVAS_LAYER.s.visualIndex);
       // console.log(CANVAS_LAYER.s.visualIndex);
 
       // if (clickMode && e.target.classList.contains("canvas-container")) {
@@ -73,7 +73,7 @@ function ready(data) {
 
       if (event.target == dom.canvas) {
         // dom.pj.scrollIntoView(dom.baseScroll);
-    
+
         target.scrollTo({ top: 0, behavior: "instant" });
 
         dom.pages.forEach((el) => el.classList.remove("scrollMode"));
