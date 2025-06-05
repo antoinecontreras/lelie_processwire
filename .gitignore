@@ -6,7 +6,7 @@
 /site/assets/files/**/*
 /site/config.php
 /site/config-dev.php
-
+wire
 # IDE and OS files
 .DS_Store
 Thumbs.db
