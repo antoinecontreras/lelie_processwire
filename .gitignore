@@ -3,6 +3,7 @@
 /site/modules/
 /site/config.php
 /site/config-dev.php
+/site/ready.php
 wire
 # IDE and OS files
 .DS_Store
