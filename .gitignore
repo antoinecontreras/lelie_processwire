@@ -4,6 +4,7 @@
 /site/config.php
 /site/config-dev.php
 /site/ready.php
+/site/README.txt
 wire
 # IDE and OS files
 .DS_Store
