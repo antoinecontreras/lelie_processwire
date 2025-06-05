@@ -1,5 +1,5 @@
 class CanvasManager {
-  constructor() {
+  constructor(data) {
     this.p5Instance = new p5((p) => {
       this.textures = [];
       this.s = {
@@ -23,17 +23,13 @@ class CanvasManager {
         ["border-radius", "1.4rem"],
       ];
       this.s.prevOpenTunnel = null;
-
-      p.preload = () => {
-        this.textures.push(p.loadImage("../IMG/frame_05.jpg"));
-        this.textures.push(p.loadImage("../IMG/frame_06.jpg"));
-        this.textures.push(p.loadImage("../IMG/p_a.jpg"));
-        this.textures.push(p.loadImage("../IMG/p_b.jpg"));
-        this.textures.push(p.loadImage("../IMG/frame_05.jpg"));
-        this.textures.push(p.loadImage("../IMG/p_b.jpg"));
-        this.textures.push(p.loadImage("../IMG/p_a.jpg"));
-        this.textures.push(p.loadImage("../IMG/frame_06.jpg"));
-      };
+      console.log(data);
+       Object.values(data).forEach(item => {
+          const imagePath = Object.values(item)[0];
+          this.textures.push(p.loadImage(imagePath));
+        });
+        console.log( this.textures.length);
+   
 
       p.setup = () => {
         this.canvas = p.createCanvas(
