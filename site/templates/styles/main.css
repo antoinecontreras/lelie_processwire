@@ -1,0 +1,281 @@
+/* Example CSS file */ 
+@import url(https://fonts.cdnfonts.com/css/w95fa);
+
+@font-face {
+    src: url('../FONTS/NeueBit-Regular.ttf');
+    font-family: neue;
+}
+
+@font-face {
+    src: url('../FONTS/PPMondwest-Regular.otf');
+    font-family: mondwest;
+}
+
+:root {
+    --activeR: 0deg;
+    --sizeWall: 300vw;
+    --halfSizeWall: calc(var(--sizeWall) / 2);
+    --animation-duration: 400ms;
+    --curve: linear;
+    --scroll-depth: 0vw;
+    --base-translate-x: calc(var(--halfSizeWall) * 0.5);
+    --base-translate-z: calc(var(--scroll-depth) + var(--halfSizeWall) * -1);
+    --base-rotate-y: rotateY(-90.001deg);
+    --left-translate-z: calc(var(--scroll-depth) + var(--sizeWall) * -1);
+    --left-rotate-y: rotateY(90.001deg);
+    --left-translate-x: calc(var(--halfSizeWall) * -0.5);
+    --left-rotate-deg: 90.001deg;
+    --perspective: 100vw;
+    --g_margin: 40px;
+    --g_marginHalf: calc(40px / 4);
+    --font-size: .9rem;
+    --word: "tesdddt";
+    --grey: #ccc;
+    --dark_grey: #838383;
+    --active_color: rgb(153, 255, 0);
+    --scale: 1;
+    --border-thickness: 1px;
+    --color-black: rgb(0, 0, 0);
+}
+
+html {
+    overflow: hidden;
+}
+
+body {
+    font-family: "Martian Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 112.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* width: 100vw;
+    height: 100dvh; 
+    overflow: scroll; */
+    margin: 0;
+    cursor: crosshair;
+    /* background: linear-gradient(0deg, #efefef 0%, white 41%, white 53%, #bebebe 100%); */
+}
+
+
+
+p {
+    font-size: var(--font-size);
+    line-height: var(--font-size);
+    margin: calc(var(--font-size) / 2) 0;
+}
+.projects.focus+.scene+span#back{
+    visibility: visible;
+}
+span#back {visibility: hidden;
+    position: fixed;
+    top: calc(var(--g_margin) / 4);
+    left: calc(var(--g_margin) / 4);
+    width: calc(var(--g_margin) / 2);
+    height: calc(var(--g_margin) / 1);
+    background-color: white;
+    border-radius: 14px;
+    z-index: 1000;
+    opacity: 0.7;
+}
+
+span#back:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.home {
+
+    z-index: 100000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+}
+
+.canvas-container {
+    top: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    background: linear-gradient(0deg, #efefef 0%, white 41%, white 53%, #bebebe 100%);
+}
+
+.canvas-container.scrollMode {
+    /* position: sticky; */
+}
+
+.scene {
+    top: 0;
+    position: absolute;
+    width: 100vw;
+    display: flex;
+    /* height: calc(100dvh - var(--g_marginHalf)); */
+    height: 100dvh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+
+.scene>a {
+    pointer-events: all;
+    position: absolute;
+    visibility: hidden;
+    color: black;
+    margin-bottom: 6px;
+    background: white;
+    text-decoration: none;
+    border-radius: 30px;
+    padding: 2px 8px;
+    opacity: 0.7;
+}
+
+.scene>a.focus {
+    visibility: visible;
+}
+
+.projects>.project.loading {
+    /* visibility: hidden; */
+    /* display: none; */
+}
+
+.projects>.project {
+    /* background: rgb(255, 255, 255); */
+    flex: 1 0 100vh;
+}
+
+.projects {
+
+    display: flex;
+    overflow: scroll;
+    /* overflow-y: hidden; */
+    height: 100dvh;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    overscroll-behavior: auto;
+    /* grid-gap: 10px; */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.projects.focus {
+    scroll-snap-type: y mandatory;
+    /* overflow-y: scroll; */
+}
+
+.project,
+.canvas-container {
+    align-items: start;
+}
+
+.project {
+    height: 100vh;
+    overflow-y: scroll;
+    grid-template-columns: 1fr 1fr;
+    scroll-snap-align: center;
+    display: grid;
+
+    flex-direction: row;
+    position: relative;
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+    /* pointer-events: none; */
+    /* overflow-y: auto;    */
+}
+
+.project.scrollMode+.project {
+    /* overflow-y: hidden; */
+
+}
+
+.project.scrollMode {
+    /* pointer-events: all; */
+    margin-top: -100vh;
+
+    /* position: sticky; */
+    top: 0;
+}
+
+.project.scrollMode .flat-content {
+    margin-top: 100vh;
+}
+
+.project.left .flat-content {
+    grid-column: 1;
+}
+
+.flat-content {
+
+    pointer-events: all;
+    background: rgb(255 255 255 / 85%);
+    backdrop-filter: blur(16px);
+    grid-column: 2;
+    display: grid;
+    position: relative;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: calc(50vh - .9rem * 7) auto;
+    grid-gap: calc(var(--g_margin) / 4);
+
+
+    padding: calc(var(--g_margin) / 4);
+
+    /* width: calc(50% - 0px); */
+}
+
+.p_header {
+    grid-column: span 3 / span 3;
+}
+
+.p_images {
+    grid-column: span 2 / span 2;
+    grid-row-start: 4;
+    display: flex;
+}
+
+.p_images .image_content {
+    width: 50%;
+}
+
+.p_video {
+    grid-column: span 3 / span 3;
+    grid-row-start: 5;
+}
+
+.v_player {
+    white-space: nowrap;
+    font-size: var(--font-size);
+    text-transform: lowercase;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.dots {
+    flex-grow: 1;
+    border-bottom: 1px dotted var(--grey);
+    margin: 0 0.45rem;
+    position: relative;
+}
+
+.specs div {
+    font-size: var(--font-size);
+    text-transform: lowercase;
+    display: flex;
+    align-items: baseline;
+    white-space: nowrap;
+}
+
+.specs div::before {
+    content: ">>";
+    color: #4d4d4d;
+    left: 0;
+    pointer-events: none;
+}

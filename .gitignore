@@ -5,6 +5,12 @@
 /site/config-dev.php
 /site/ready.php
 /site/README.txt
+.htaccess
+composer.json
+CONTRIBUTING.md
+LICENSE.TXT
+README.md
+
 wire
 # IDE and OS files
 .DS_Store
