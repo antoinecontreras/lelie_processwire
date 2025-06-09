@@ -1,5 +1,5 @@
 class CanvasManager {
-  constructor(data) {
+  constructor(d) {
     this.p5Instance = new p5((p) => {
       this.textures = [];
       this.s = {
@@ -15,6 +15,7 @@ class CanvasManager {
         prevOpenTunnel: null,
         inVolet: false,
         clickMode: false,
+        d: d,
       };
       const styleDatas = [
         ["pointer-events", "none"],
@@ -23,13 +24,12 @@ class CanvasManager {
         ["border-radius", "1.4rem"],
       ];
       this.s.prevOpenTunnel = null;
-      console.log(data);
-       Object.values(data).forEach(item => {
-          const imagePath = Object.values(item)[0];
-          this.textures.push(p.loadImage(imagePath));
-        });
-        console.log( this.textures.length);
-   
+      // console.log(data);
+      Object.values(d.data).forEach((item) => {
+        const imagePath = Object.values(item)[0];
+        this.textures.push(p.loadImage(imagePath));
+      });
+      // console.log( this.textures.length);
 
       p.setup = () => {
         this.canvas = p.createCanvas(
@@ -57,13 +57,20 @@ class CanvasManager {
 
         this.sw = window.innerWidth;
         this.sh = window.innerHeight;
+
         // this.sh = 1204;
 
         this.s.isAnimating = false;
         this.s.base = this.s.raw * (this.sw / 3000);
         this.s.scale = this.sw / 3000;
-        this.c = this._initCamera(p);
+        // this.c = this._initCamera(p);
         this.s.visualIndex = this.textures.length - 1;
+        p.push();
+        p.fill(0);
+
+        p.rect(-this.sw / 2, -this.sh / 2, 200, 200);
+        p.pop();
+
         // this.panelOffset = (this.textures.length - 1) ;
         addScreenPositionFunction(p);
         this._updateVoletsConfig();
@@ -81,7 +88,7 @@ class CanvasManager {
           });
         });
         this.s.prevHoverTunnel = this.tunnels[this.tunnels.length - 1];
-        console.log(this.s.prevHoverTunnel);
+        // console.log(this.s.prevHoverTunnel);
         this._enterTunnel(this.s.prevHoverTunnel);
       };
 
@@ -99,10 +106,12 @@ class CanvasManager {
     const p = this.p5Instance;
     p.clear();
     p.noStroke();
+
     const corners = this.drawTunnel(p);
     if (this.s.inVolet && !this.s.clickMode) {
-      const mapX = p.map(p.mouseX, 0, this.sw, -this.sw / 2, this.sw / 2);
       
+      const mapX = p.map(p.mouseX, 0, this.sw, -this.sw / 2, this.sw / 2);
+
       for (let i = 0; i < corners.length; i++) {
         const leftSide = corners[i][0];
         const rightSide = corners[i][1];
@@ -118,6 +127,7 @@ class CanvasManager {
             this.activeTunnel !== this.s.prevOpenTunnel &&
             this.s.prevOpenTunnel
           ) {
+            
             this.tunnels.forEach((tunnel) => {
               tunnel
                 .filter((volet) => volet.isOpen == true)
@@ -162,6 +172,7 @@ class CanvasManager {
   }
   setupMouseMove(p) {
     p.mouseMoved = () => {
+      
       if (this.s.clickMode) return;
       const w = p.width,
         h = p.height,
@@ -188,28 +199,25 @@ class CanvasManager {
         ? "right"
         : false;
       if (this.s.inVolet) {
+        
         this.s.draw = true;
         this.p5Instance.loop();
       } else {
-        // this.tunnels.forEach((volet) => volet.filter((frame) => frame.cfg));
-        if (Array.isArray(this.tunnels)) {
-          this.tunnels.forEach((volet) => {
-            volet
-              .filter((frame) => frame.isOpen == true)
-              .forEach((frame) => {
-                frame.close();
-                // this.s.draw = true;
-                // this.p5Instance.loop();
-              });
-          });
-        }
+        // if (Array.isArray(this.tunnels)) {
+        //   this.tunnels.forEach((volet) => {
+        //     volet
+        //       .filter((frame) => frame.isOpen == true)
+        //       .forEach((frame) => {
+        //         frame.close();
+        //       });
+        //   });
+        // }
       }
     };
   }
   setupMouseClicked(p) {
     p.mouseClicked = (e) => {
       if (!this.s.inVolet || e.target.id !== "canvasForHTML") return;
-
       const { s, tunnels, textures } = this;
 
       // Update positions and state
@@ -226,6 +234,7 @@ class CanvasManager {
       s.scrollFrame = tunnels[s.visualIndex];
       this._enterTunnel(s.scrollFrame);
       this._getTitle(s.visualIndex);
+
       s.prevHoverTunnel = s.scrollFrame;
 
       s.raw = (s.current * this.sw) / 2 / s.scale;
@@ -240,12 +249,24 @@ class CanvasManager {
       } else s.clickMode = false;
     };
   }
-  _getTitle(element) {
-    const el = document.querySelector(`.scene>a:nth-child(${element + 1})`);
-    const focused = document.querySelector(".scene>a.focus");
-    if (focused === el) return;
-    focused?.classList.remove("focus");
-    el.classList.add("focus");
+  _getTitle(idx) {
+    const currentValues = Object.values(this.s.d.data[idx])[0];
+    const projects = Object.entries(this.s.d.sortedData).map(
+      ([projectName, images]) => ({
+        projectName,
+        images,
+      })
+    );
+    const checkProj = projects.find((el) => el.images.includes(currentValues));
+
+    const focused = document.querySelector(
+      `.scene a[href="#/${checkProj.projectName}/"]`
+    );
+    console.log(focused);
+    const el = document.querySelector(".scene>a.focus");
+    // if (focused === el) return;
+    el?.classList.remove("focus");
+    focused.classList.add("focus");
   }
   _enterTunnel(frames) {
     frames.filter((v) => v.cfg.texKind === "frame");
@@ -257,6 +278,7 @@ class CanvasManager {
     window.addEventListener(
       "wheel",
       (e) => {
+        
         if (this.s.clickMode) return;
         e.preventDefault();
         // Mise à jour du raw, base et draw
@@ -286,7 +308,7 @@ class CanvasManager {
           this._enterTunnel(this.s.scrollFrame);
 
           this._enterTunnel(this.s.scrollFrame);
-          this._getTitle(this.s.visualIndex);
+          // this._getTitle(this.s.visualIndex);
           this.s.prevHoverTunnel = this.s.scrollFrame;
         }
 
@@ -313,6 +335,7 @@ class CanvasManager {
     for (let idx = 0; idx < this.tunnels.length; idx++) {
       const voletList = this.tunnels[idx];
       const z = this.s.base - ((this.textures.length - 1 - idx) * this.sw) / 2;
+
       if (z < halfSw) {
         let vol = [];
         for (const volet of voletList) {

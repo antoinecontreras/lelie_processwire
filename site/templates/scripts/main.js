@@ -12,9 +12,10 @@
 //     }
 //   }
 
-function ready(data) {
+function ready(d) {
   // 1. Instanciation du CanvasManager
-  let CANVAS_LAYER = new CanvasManager(data);
+  let CANVAS_LAYER = new CanvasManager(d);
+
   let dom = {
     scene: document.querySelector(".scene"),
     pj: document.querySelector("div.projects"),
@@ -22,13 +23,21 @@ function ready(data) {
     canvas: document.querySelector("#canvasForHTML"),
     back: document.querySelector("span#back"),
     baseScroll: 0,
+    sortedData: sortedData,
+    sortedDataArray: sortedDataArray,
   };
   dom.pj.classList.remove("loading");
   dom.back.addEventListener("click", (e) => {
     dom.pj.classList.remove("focus");
-    const target = dom.pj.querySelector(
-      `.projects .project#${"t" + CANVAS_LAYER.s.visualIndex}`
-    );
+
+    CANVAS_LAYER.tunnels.forEach((volet) => {
+      volet
+      // .filter((frame) => frame.isOpen == true)
+      .forEach((frame) => {
+          frame.close();
+        });
+    });
+    const target = getProjets(dom, CANVAS_LAYER);
     target.scrollTo({ top: 0, behavior: "instant" });
     // target.scrollTo({ top: 0, behavior: "instant" });
     CANVAS_LAYER.s.clickMode = false;
@@ -51,38 +60,22 @@ function ready(data) {
     setTimeout(() => {
       // Remove the event parameter from setTimeout
 
-      // console.log("click", e.target);
       let clickMode = CANVAS_LAYER.s.clickMode;
-      const target = dom.pj.querySelector(
-        `.projects .project#${"t" + CANVAS_LAYER.s.visualIndex}`
-      );
-      console.log(CANVAS_LAYER.s.visualIndex);
-      // console.log(CANVAS_LAYER.s.visualIndex);
 
+      const target = getProjets(dom, CANVAS_LAYER);
       // if (clickMode && e.target.classList.contains("canvas-container")) {
       if (clickMode && e.target.classList.contains("canvas-container")) {
-        // console.log("clickMode is false");
-        // dom.canvas.classList.add("scrollMode");
-        console.log(target);
         target.classList.add("scrollMode");
         if (target) replaceCanvas(target);
         dom.pj.classList.add("focus");
-
         return;
       }
 
       if (event.target == dom.canvas) {
-        // dom.pj.scrollIntoView(dom.baseScroll);
-
         target.scrollTo({ top: 0, behavior: "instant" });
 
         dom.pages.forEach((el) => el.classList.remove("scrollMode"));
         dom.pj.scrollIntoView(dom.baseScroll);
-        //  target.classList.remove("scrollMode");
-
-        // dom.canvas.scrollIntoView({ behavior: "instant", block: "center" });
-        // dom.canvas.classList.remove("scrollMode");
-        // dom.scene.style.visibility = "visible";
       }
     }, 1);
   });
@@ -95,6 +88,17 @@ function ready(data) {
     const canvasRect = dom.canvas.getBoundingClientRect();
     const parentRect = dom.pj.getBoundingClientRect();
     dom.baseScroll = canvasRect.top - parentRect.top + dom.pj.scrollTop;
+  };
+  getProjets = (dom, CANVAS_LAYER) => {
+    const currentValues = Object.values(d.data[CANVAS_LAYER.s.visualIndex])[0];
+    // console.log(currentValues, dom.sortedDataArray);
+    const checkProj = dom.sortedDataArray.find((el) =>
+      el.images.includes(currentValues)
+    );
+    const target = document.querySelector(
+      `.projects .project#${checkProj.projectName}`
+    );
+    return target;
   };
 }
 // })();

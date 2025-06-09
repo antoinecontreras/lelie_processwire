@@ -33,8 +33,8 @@ class Volet {
     this.style.opacity = this.style.sleep;
   }
   open(delta) {
-    this.isOpen = true;
     this.targetAngle = this.initialAngle + delta;
+    this.isOpen = true;
   }
   isClicked(delta) {
     const rotate = this.cfg.angle > 0 ? -delta : delta;

@@ -10,7 +10,7 @@ foreach ($projects as $project) {
 	if ($project->gallery) {
 		foreach ($project->gallery as $image) {
 			array_push($gallery, array(
-				$project->title => $image->url
+				$project->name => $image->url
 			));
 		}
 	}
@@ -30,7 +30,7 @@ foreach ($projects as $project) {
 				$attribut = "right";
 			}
 		?>
-			<div class='project <?= $attribut ?>' id='t<?= $i ?>'>
+			<div class='project <?= $attribut ?>' id='<?= $project->name ?>'>
 				<p><?= $i ?></p>
 			</div>
 
@@ -46,13 +46,32 @@ foreach ($projects as $project) {
 			$i++;
 			$class = ($i === $totalProjects) ? ' class="focus"' : '';
 		?>
-			<a href="#<?= $project->url ?>" <?= $class ?>><?= $project->title ?></a>
+			<a href="#<?= $project->url ?>" <?= $class ?>><?= $project->title?></a>
 		<?php endforeach; ?>
 
 	</div>
 	<span id="back"></span>
 	<script>
 		const data = window.PRELOAD_IMAGES = <?= json_encode($gallery, JSON_UNESCAPED_SLASHES); ?>;
-		ready(data);
+		  const filterData = Object.keys(data);
+		const sortedData = filterData.reduce((acc, key) => {
+			const entry = data[key];
+			const projectName = Object.keys(entry)[0];
+			const imagePath = entry[projectName];
+
+			if (!acc[projectName]) {
+			acc[projectName] = [];
+			}
+			acc[projectName].push(imagePath);
+
+			return acc;
+		}, {});
+
+		// Convertir l'objet en tableau pour pouvoir utiliser forEach
+		const sortedDataArray = Object.entries(sortedData).map(([projectName, images]) => ({
+			projectName: projectName,
+			images: images
+		}));
+		ready({data, sortedData, sortedDataArray});
 	</script>
 </div>
