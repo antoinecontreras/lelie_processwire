@@ -1,4 +1,4 @@
-/* Example CSS file */ 
+/* Example CSS file */
 @import url(https://fonts.cdnfonts.com/css/w95fa);
 
 @font-face {
@@ -66,10 +66,13 @@ p {
     line-height: var(--font-size);
     margin: calc(var(--font-size) / 2) 0;
 }
-.projects.focus+.scene+span#back{
+
+.projects.focus+.scene+span#back {
     visibility: visible;
 }
-span#back {visibility: hidden;
+
+span#back {
+    visibility: hidden;
     position: fixed;
     top: calc(var(--g_margin) / 4);
     left: calc(var(--g_margin) / 4);
@@ -243,6 +246,13 @@ span#back:hover {
 .p_images .image_content {
     width: 50%;
 }
+.v_player {
+    width: 100%;
+    grid-column: span 2 / span 2;
+    grid-row-start: 4;
+    display: flex;
+}
+
 
 .p_video {
     grid-column: span 3 / span 3;

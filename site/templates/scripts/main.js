@@ -48,7 +48,7 @@ function ready(d) {
   dom.pj.addEventListener("scroll", (e) => {
     if (dom.baseScroll >= e.target.scrollTop) {
       // dom.pj.classList.remove("focus");
-      dom.pj.style.overflowY = "hidden";
+      // dom.pj.style.overflowY = "hidden";
 
       e.preventDefault();
    
@@ -59,12 +59,12 @@ function ready(d) {
     }
   });
   dom.pj.addEventListener("scrollend", (e) => {
-    console.log("scrollend");
-     e.target.scrollTo({
-          top: dom.baseScroll,
-          behavior: "instant",
-        });
-    dom.pj.style.overflowY = "scroll";
+    // console.log("scrollend");
+    //  e.target.scrollTo({
+    //       top: dom.baseScroll,
+    //       behavior: "instant",
+    //     });
+    // dom.pj.style.overflowY = "scroll";
   }
   );
 
