@@ -90,7 +90,7 @@ function ready(d) {
         dom.pages.forEach((el) => el.classList.remove("scrollMode"));
         dom.pj.scrollIntoView(dom.baseScroll);
       }
-    }, 1);
+    }, 100);
   });
 
   // document.addEventListener("")

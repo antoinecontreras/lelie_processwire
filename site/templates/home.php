@@ -32,27 +32,30 @@ foreach ($projects as $project) {
 		?>
 			<div class='project <?= $attribut ?>' id='<?= $project->name ?>'>
 				<div class="flat-content">
-					<div class="p_header">
-						<p class="p_title">[<?= $project->title ?>]</p>
-						<p class="p_description"><?= $project->textarea ?></p>
-					</div>
-					<div class="specs p_tab">
-						<?php foreach ($project->content as $c) : ?>
-							<div><span class="label"><?= $c->title ?></span><span class="dots"></span></div>
-						<?php endforeach; ?>
-					</div>
-					<div class="specs p_val">
-						<?php foreach ($project->content as $c) : ?>
-							<div><span class="label"><?= $c->text ?></span><span class="dots"></span></div>
-						<?php endforeach; ?>
+					<div class="first-page">
+						<div class="p_header">
+							<p class="p_title">[<?= $project->title ?>]</p>
+							<p class="p_description"><?= $project->textarea ?></p>
+						</div>
+						<div class="specs p_tab">
+							<?php foreach ($project->content as $c) : ?>
+								<div><span class="label"><?= $c->title ?></span><span class="dots"></span></div>
+							<?php endforeach; ?>
+						</div>
+						<div class="specs p_val">
+							<?php foreach ($project->content as $c) : ?>
+								<div><span class="label"><?= $c->text ?></span><span class="dots"></span></div>
+							<?php endforeach; ?>
 
+						</div>
+						<div class=" p_images">
+							<?php foreach ($project->gallery as $img) : ?>
+								<img class="image_content" src="<?= $img->url ?>" alt="">
+							<?php endforeach; ?>
+
+						</div>
 					</div>
-					<div class=" p_images">
-						<?php foreach ($project->gallery as $img) : ?>
-							 <img class="image_content" src="<?= $img->url ?>" alt="">
-						<?php endforeach; ?>
-							
-					</div>
+
 					<div class="image_content p_video">
 						<a class="v_player">
 							<span class="">[▶]</span>
@@ -60,7 +63,6 @@ foreach ($projects as $project) {
 							<span class="">+</span>
 						</a>
 						<video class="v_player" src="<?= $project->video->url ?>"></video>
-						<!-- <img class="" src="../IMG/2_content.jpg"> -->
 					</div>
 
 				</div>
@@ -99,7 +101,6 @@ foreach ($projects as $project) {
 			return acc;
 		}, {});
 
-		// Convertir l'objet en tableau pour pouvoir utiliser forEach
 		const sortedDataArray = Object.entries(sortedData).map(([projectName, images]) => ({
 			projectName: projectName,
 			images: images

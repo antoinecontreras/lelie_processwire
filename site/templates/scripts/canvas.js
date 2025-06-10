@@ -46,8 +46,7 @@ class CanvasManager {
         });
 
         p.clear();
-        // p.noLoop();
-
+        p.noLoop();
         this.triangleTextures = this.buildTriangleTextures(p, 0.5);
         this.mergedTri = this.buildMergedTriangle(
           p,
@@ -70,13 +69,13 @@ class CanvasManager {
 
         p.rect(-this.sw / 2, -this.sh / 2, 200, 200);
         p.pop();
-
         // this.panelOffset = (this.textures.length - 1) ;
         addScreenPositionFunction(p);
         this._updateVoletsConfig();
+        // p.frameRate(30);
+
         this.tunnels = this.textures.map((frameTex, idx) => {
           return this.VOLETS_CFG.map((cfg) => {
-            console.log();
             cfg.ancer = cfg.angle > 0 ? 0 : cfg.wall;
             const tex = cfg.texKind === "merged" ? this.mergedTri : frameTex;
             return new Volet(p, tex, {
@@ -102,8 +101,7 @@ class CanvasManager {
     });
   }
   _draw() {
-    if (!this.s.draw) return;
-
+    if (!this.s.draw) return ;
     const p = this.p5Instance;
     p.clear();
     p.noStroke();
@@ -123,19 +121,28 @@ class CanvasManager {
           mapX <= Math.max(side.p1, side.p2);
 
         if (isInSide) {
-          if (
-            this.activeTunnel !== this.s.prevOpenTunnel &&
-            this.s.prevOpenTunnel
-          ) {
+          // if (
+          //   this.activeTunnel !== this.s.prevOpenTunnel &&
+          //   this.s.prevOpenTunnel
+          // ) {
+
+            // this.tunnels.forEach((tunnel) => {
+            //   tunnel
+            //     .filter((volet) => volet.isOpen == true)
+            //     .forEach((volet) => volet.close());
+            //   this.s.draw = true;
+            
+            // });
+          
+          // }
+          if (this.s.current !== this.textures.length - 1 - i) {
             this.tunnels.forEach((tunnel) => {
               tunnel
                 .filter((volet) => volet.isOpen == true)
                 .forEach((volet) => volet.close());
               this.s.draw = true;
-              this.p5Instance.loop();
+            
             });
-          }
-          if (this.s.current !== this.textures.length - 1 - i) {
             this.s.current = this.textures.length - 1 - i;
           }
 
@@ -143,9 +150,9 @@ class CanvasManager {
           this.currentTunnel = this.tunnels[i][tunnelIndex];
 
           this._openTunnel(this.currentTunnel);
-          const mergedData = this.tunnels[i].find(
-            (e) => e.cfg.texKind === "merged"
-          );
+          // const mergedData = this.tunnels[i].find(
+          //   (e) => e.cfg.texKind === "merged"
+          // );
         } else {
           const mergedData = this.tunnels[i].find(
             (e) => e.cfg.texKind === "merged"
@@ -162,6 +169,7 @@ class CanvasManager {
       this.s.prevOpenTunnel = this.currentTunnel;
       this.s.draw = false;
       this.s.isAnimating = false;
+            //  this.p5Instance.noLoop();
     }
   }
 
@@ -201,6 +209,7 @@ class CanvasManager {
         this.s.draw = true;
         this.p5Instance.loop();
       } else {
+         this.p5Instance.noLoop();
         if (Array.isArray(this.tunnels)) {
           this.tunnels.forEach((volet) => {
             volet
@@ -239,9 +248,9 @@ class CanvasManager {
       s.draw = true;
       s.visualIndex = textures.length - 1 - s.current;
 
-       this.currentTunnel.focus();
-       
-     if (!s.clickMode && Math.round(this.currentTunnel.cfg.z) === 0) {
+      this.currentTunnel.focus();
+
+      if (!s.clickMode && Math.round(this.currentTunnel.cfg.z) === 0) {
         this.currentTunnel.isClicked(90);
         s.clickMode = true;
       } else s.clickMode = false;
@@ -260,7 +269,7 @@ class CanvasManager {
     const focused = document.querySelector(
       `.scene a[href="#/${checkProj.projectName}/"]`
     );
-    console.log(focused);
+    
     const el = document.querySelector(".scene>a.focus");
     // if (focused === el) return;
     el?.classList.remove("focus");
@@ -309,7 +318,7 @@ class CanvasManager {
           this.s.prevHoverTunnel = this.s.scrollFrame;
         }
 
-        this.p5Instance.loop();
+        // this.p5Instance.loop();
       },
       { passive: false }
     );

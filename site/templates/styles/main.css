@@ -207,18 +207,20 @@ span#back:hover {
     top: 0;
 }
 
-.project.scrollMode .flat-content {
+.project.scrollMode .first-page {
     margin-top: 100vh;
 }
 
-.project.left .flat-content {
+.project.left .first-page {
     grid-column: 1;
 }
 
-.flat-content {
+.first-page {
+    height: calc(100dvh - var(--g_margin) / 2);
 
     pointer-events: all;
-    background: rgb(255 255 255 / 85%);
+    /* background: rgb(255 255 255 / 85%); */
+    background: rgba(193, 9, 9, 0.85);
     backdrop-filter: blur(16px);
     grid-column: 2;
     display: grid;
@@ -226,11 +228,7 @@ span#back:hover {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: calc(50vh - .9rem * 7) auto;
     grid-gap: calc(var(--g_margin) / 4);
-
-
     padding: calc(var(--g_margin) / 4);
-
-    /* width: calc(50% - 0px); */
 }
 
 .p_header {
@@ -238,14 +236,23 @@ span#back:hover {
 }
 
 .p_images {
-    grid-column: span 2 / span 2;
+    grid-column: span 3;
     grid-row-start: 4;
-    display: flex;
+    display: grid;
+    /* height: 10%; */
+    grid-gap: calc(var(--g_margin) / 4);
+    grid-template-columns: 1fr 1fr 1fr;
+    /* grid-template-rows: 100%; */
+    background: blue;
+    align-items: end;
 }
 
 .p_images .image_content {
-    width: 50%;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
 }
+
 .v_player {
     width: 100%;
     grid-column: span 2 / span 2;
