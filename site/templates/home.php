@@ -31,6 +31,10 @@ foreach ($projects as $project) {
 			}
 		?>
 			<div class='project <?= $attribut ?>' id='<?= $project->name ?>'>
+				<?php foreach($project->content as $c) :?>
+					<p><?= $c->title ?></p>
+					
+				<?php  endforeach; ?>	
 				<p><?= $i ?></p>
 			</div>
 

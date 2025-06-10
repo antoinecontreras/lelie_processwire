@@ -103,31 +103,30 @@ class CanvasManager {
   }
   _draw() {
     if (!this.s.draw) return;
+
     const p = this.p5Instance;
     p.clear();
     p.noStroke();
 
     const corners = this.drawTunnel(p);
     if (this.s.inVolet && !this.s.clickMode) {
-      
       const mapX = p.map(p.mouseX, 0, this.sw, -this.sw / 2, this.sw / 2);
 
       for (let i = 0; i < corners.length; i++) {
         const leftSide = corners[i][0];
         const rightSide = corners[i][1];
         if (!leftSide && !rightSide) continue;
-        
+
         const side = this.s.inVolet === "left" ? leftSide : rightSide;
         const isInSide =
-        mapX >= Math.min(side.p1, side.p2) &&
-        mapX <= Math.max(side.p1, side.p2);
-        
+          mapX >= Math.min(side.p1, side.p2) &&
+          mapX <= Math.max(side.p1, side.p2);
+
         if (isInSide) {
           if (
             this.activeTunnel !== this.s.prevOpenTunnel &&
             this.s.prevOpenTunnel
           ) {
-            
             this.tunnels.forEach((tunnel) => {
               tunnel
                 .filter((volet) => volet.isOpen == true)
@@ -142,15 +141,16 @@ class CanvasManager {
 
           const tunnelIndex = this.s.inVolet === "left" ? 0 : 1;
           this.currentTunnel = this.tunnels[i][tunnelIndex];
+
           this._openTunnel(this.currentTunnel);
           const mergedData = this.tunnels[i].find(
             (e) => e.cfg.texKind === "merged"
           );
-          mergedData.sleep();
         } else {
           const mergedData = this.tunnels[i].find(
             (e) => e.cfg.texKind === "merged"
           );
+
           mergedData.focus();
         }
       }
@@ -172,7 +172,6 @@ class CanvasManager {
   }
   setupMouseMove(p) {
     p.mouseMoved = () => {
-      
       if (this.s.clickMode) return;
       const w = p.width,
         h = p.height,
@@ -199,19 +198,18 @@ class CanvasManager {
         ? "right"
         : false;
       if (this.s.inVolet) {
-        
         this.s.draw = true;
         this.p5Instance.loop();
       } else {
-        // if (Array.isArray(this.tunnels)) {
-        //   this.tunnels.forEach((volet) => {
-        //     volet
-        //       .filter((frame) => frame.isOpen == true)
-        //       .forEach((frame) => {
-        //         frame.close();
-        //       });
-        //   });
-        // }
+        if (Array.isArray(this.tunnels)) {
+          this.tunnels.forEach((volet) => {
+            volet
+              .filter((frame) => frame.isOpen == true)
+              .forEach((frame) => {
+                frame.close();
+              });
+          });
+        }
       }
     };
   }
@@ -224,15 +222,14 @@ class CanvasManager {
       // console.log(s.current);
 
       // Handle tunnel transitions
-      s.prevHoverTunnel
-        ?.filter((v) => v.cfg.texKind === "frame")
-        .forEach((v) => {
-          v.close();
-          v.sleep();
-        });
+      // s.prevHoverTunnel
+      //   ?.filter((v) => v.cfg.texKind === "frame")
+      //   .forEach((v) => {
+      //     v.close();
+      //     v.sleep();
+      //   });
 
       s.scrollFrame = tunnels[s.visualIndex];
-      this._enterTunnel(s.scrollFrame);
       this._getTitle(s.visualIndex);
 
       s.prevHoverTunnel = s.scrollFrame;
@@ -242,9 +239,10 @@ class CanvasManager {
       s.draw = true;
       s.visualIndex = textures.length - 1 - s.current;
 
-      if (!s.clickMode && this.currentTunnel.cfg.z === 0) {
+       this.currentTunnel.focus();
+       
+     if (!s.clickMode && Math.round(this.currentTunnel.cfg.z) === 0) {
         this.currentTunnel.isClicked(90);
-
         s.clickMode = true;
       } else s.clickMode = false;
     };
@@ -278,7 +276,6 @@ class CanvasManager {
     window.addEventListener(
       "wheel",
       (e) => {
-        
         if (this.s.clickMode) return;
         e.preventDefault();
         // Mise à jour du raw, base et draw

@@ -32,10 +32,10 @@ function ready(d) {
 
     CANVAS_LAYER.tunnels.forEach((volet) => {
       volet
-      // .filter((frame) => frame.isOpen == true)
-      .forEach((frame) => {
-          frame.close();
-        });
+        // .filter((frame) => frame.isOpen == true)
+        // .forEach((frame) => {
+        //   frame.close();
+        // });
     });
     const target = getProjets(dom, CANVAS_LAYER);
     target.scrollTo({ top: 0, behavior: "instant" });
@@ -46,14 +46,27 @@ function ready(d) {
     CANVAS_LAYER._draw();
   });
   dom.pj.addEventListener("scroll", (e) => {
-    if (dom.baseScroll > e.target.scrollTop) {
+    if (dom.baseScroll >= e.target.scrollTop) {
+      // dom.pj.classList.remove("focus");
+      dom.pj.style.overflowY = "hidden";
+
       e.preventDefault();
-      e.target.scrollTo({
-        top: dom.baseScroll,
-        behavior: "instant",
-      });
+   
+      // e.target.scrollTo({
+      //   top: dom.baseScroll,
+      //   behavior: "smooth",
+      // });
     }
   });
+  dom.pj.addEventListener("scrollend", (e) => {
+    console.log("scrollend");
+     e.target.scrollTo({
+          top: dom.baseScroll,
+          behavior: "instant",
+        });
+    dom.pj.style.overflowY = "scroll";
+  }
+  );
 
   document.addEventListener("click", (e) => {
     const event = e; // Capture the event
