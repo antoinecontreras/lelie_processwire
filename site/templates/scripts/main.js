@@ -29,14 +29,14 @@ function ready(d) {
   dom.pj.classList.remove("loading");
   dom.back.addEventListener("click", (e) => {
     dom.pj.classList.remove("focus");
-
-    CANVAS_LAYER.tunnels.forEach((volet) => {
-      volet
-        // .filter((frame) => frame.isOpen == true)
-        // .forEach((frame) => {
-        //   frame.close();
-        // });
-    });
+    CANVAS_LAYER.p5Instance.loop()
+    // CANVAS_LAYER.tunnels.forEach((volet) => {
+      // volet;
+      // .filter((frame) => frame.isOpen == true)
+      // .forEach((frame) => {
+      //   frame.close();
+      // });
+    // });
     const target = getProjets(dom, CANVAS_LAYER);
     target.scrollTo({ top: 0, behavior: "instant" });
     // target.scrollTo({ top: 0, behavior: "instant" });
@@ -51,7 +51,7 @@ function ready(d) {
       // dom.pj.style.overflowY = "hidden";
 
       e.preventDefault();
-   
+
       // e.target.scrollTo({
       //   top: dom.baseScroll,
       //   behavior: "smooth",
@@ -65,8 +65,7 @@ function ready(d) {
     //       behavior: "instant",
     //     });
     // dom.pj.style.overflowY = "scroll";
-  }
-  );
+  });
 
   document.addEventListener("click", (e) => {
     const event = e; // Capture the event
@@ -81,6 +80,8 @@ function ready(d) {
         target.classList.add("scrollMode");
         if (target) replaceCanvas(target);
         dom.pj.classList.add("focus");
+        CANVAS_LAYER.p5Instance.noLoop();
+
         return;
       }
 
@@ -90,7 +91,7 @@ function ready(d) {
         dom.pages.forEach((el) => el.classList.remove("scrollMode"));
         dom.pj.scrollIntoView(dom.baseScroll);
       }
-    }, 100);
+    }, 200);
   });
 
   // document.addEventListener("")

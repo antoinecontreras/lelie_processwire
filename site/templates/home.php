@@ -86,7 +86,21 @@ foreach ($projects as $project) {
 	</div>
 	<span id="back"></span>
 	<script>
-		const data = window.PRELOAD_IMAGES = <?= json_encode($gallery, JSON_UNESCAPED_SLASHES); ?>;
+		<?php
+		$gallery_resized = array();
+		foreach ($projects as $project) {
+			if ($project->gallery) {
+			foreach ($project->gallery as $image) {
+				// Resize to max width of 1200px while maintaining aspect ratio
+				$resized = $image->size(1200);
+				array_push($gallery_resized, array(
+				$project->name => $resized->url
+				));
+			}
+			}
+		}
+		?>
+		const data = window.PRELOAD_IMAGES = <?= json_encode($gallery_resized, JSON_UNESCAPED_SLASHES); ?>;
 		const filterData = Object.keys(data);
 		const sortedData = filterData.reduce((acc, key) => {
 			const entry = data[key];

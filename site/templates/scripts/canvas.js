@@ -19,7 +19,7 @@ class CanvasManager {
       };
       const styleDatas = [
         ["pointer-events", "none"],
-        ["image-rendering", "pixelated"],
+        // ["image-rendering", "pixelated"],
         ["z-index", "0"],
         ["border-radius", "1.4rem"],
       ];
@@ -121,55 +121,28 @@ class CanvasManager {
           mapX <= Math.max(side.p1, side.p2);
 
         if (isInSide) {
-          // if (
-          //   this.activeTunnel !== this.s.prevOpenTunnel &&
-          //   this.s.prevOpenTunnel
-          // ) {
-
-            // this.tunnels.forEach((tunnel) => {
-            //   tunnel
-            //     .filter((volet) => volet.isOpen == true)
-            //     .forEach((volet) => volet.close());
-            //   this.s.draw = true;
-            
-            // });
-          
-          // }
-          if (this.s.current !== this.textures.length - 1 - i) {
-            this.tunnels.forEach((tunnel) => {
-              tunnel
-                .filter((volet) => volet.isOpen == true)
-                .forEach((volet) => volet.close());
+          const newIndex = this.textures.length - 1 - i;
+          if (this.s.current !== newIndex) {
+            this.tunnels.forEach(tunnel => {
+              tunnel.filter(volet => volet.isOpen).forEach(volet => volet.close());
               this.s.draw = true;
-            
             });
-            this.s.current = this.textures.length - 1 - i;
+            this.s.current = newIndex;
           }
 
-          const tunnelIndex = this.s.inVolet === "left" ? 0 : 1;
-          this.currentTunnel = this.tunnels[i][tunnelIndex];
-
+          this.currentTunnel = this.tunnels[i][this.s.inVolet === "left" ? 0 : 1];
           this._openTunnel(this.currentTunnel);
-          // const mergedData = this.tunnels[i].find(
-          //   (e) => e.cfg.texKind === "merged"
-          // );
         } else {
-          const mergedData = this.tunnels[i].find(
-            (e) => e.cfg.texKind === "merged"
-          );
-
-          mergedData.focus();
+          this.tunnels[i].find(e => e.cfg.texKind === "merged").focus();
         }
       }
     }
 
-    if (this._animationsRunning()) {
-      // this.p5Instance.loop();
-    } else {
+    if (!this._animationsRunning()) {
       this.s.prevOpenTunnel = this.currentTunnel;
       this.s.draw = false;
       this.s.isAnimating = false;
-            //  this.p5Instance.noLoop();
+
     }
   }
 
@@ -181,6 +154,7 @@ class CanvasManager {
   setupMouseMove(p) {
     p.mouseMoved = () => {
       if (this.s.clickMode) return;
+
       const w = p.width,
         h = p.height,
         cx = w / 2,
@@ -339,38 +313,46 @@ class CanvasManager {
     const halfSh = this.sh / 2;
 
     for (let idx = 0; idx < this.tunnels.length; idx++) {
-      const voletList = this.tunnels[idx];
       const z = this.s.base - ((this.textures.length - 1 - idx) * this.sw) / 2;
-
+      
+      // Early bail if z is too large
+      if (z >= halfSw) continue;
+      
       if (z < halfSw) {
-        let vol = [];
-        for (const volet of voletList) {
+        const voletList = this.tunnels[idx];
+        const vol = [];
+        
+        // Cache screen positions for performance
+        const zeroScreenPos = z > 0 
+          ? { x: halfSw, y: -halfSh }
+          : p.screenPosition(this.sw, 0, 0);
+        
+        for (let i = 0; i < 2; i++) { // Only process first two volets (left/right)
+          const volet = voletList[i];
+          const angle = volet.initialAngle;
+          
+          // Skip middle volet
+          if (angle !== -90 && angle !== 90) continue;
+          
           volet.cfg.z = z;
           volet.draw();
-
-          const angle = volet.initialAngle;
-          if (angle !== -90 && angle !== 90) continue;
-
+          
           const isLeftSide = angle === 90;
-          // console.log(volet.cfg.ancer, volet.cfg.w);
           const x = isLeftSide ? 0 : volet.cfg.w;
-
-          // console.log(z);
-          const p1 =
-            z > 0
-              ? { x: isLeftSide ? -halfSw : halfSw, y: -halfSh }
-              : p.screenPosition(x, 0, 0);
-
+          
+          const p1 = z > 0
+            ? { x: isLeftSide ? -halfSw : halfSw, y: -halfSh }
+            : p.screenPosition(x, 0, 0);
+            
           const p2 = p.screenPosition(
-            // x + (isLeftSide ? volet.cfg.w/2 : -volet.cfg.w),
             x + (isLeftSide ? halfSw : -halfSw),
             20,
             0
           );
-
+          
           vol.push({ p1: p1.x, p2: p2.x });
         }
-
+        
         vols.push(vol);
       }
     }
