@@ -90,13 +90,13 @@ foreach ($projects as $project) {
 		$gallery_resized = array();
 		foreach ($projects as $project) {
 			if ($project->gallery) {
-			foreach ($project->gallery as $image) {
-				// Resize to max width of 1200px while maintaining aspect ratio
-				$resized = $image->size(1200);
-				array_push($gallery_resized, array(
-				$project->name => $resized->url
-				));
-			}
+				foreach ($project->gallery as $image) {
+					// Resize to max width of 1200px while maintaining aspect ratio
+					$resized = $image->size(720);
+					array_push($gallery_resized, array(
+						$project->name => $resized->url
+					));
+				}
 			}
 		}
 		?>
@@ -114,6 +114,20 @@ foreach ($projects as $project) {
 
 			return acc;
 		}, {});
+		// Create an array of image arrays with project metadata
+		let projectImages = [];
+		Object.entries(sortedData).forEach(([projectName, urls], index) => {
+			projectImages.push({
+			id: index,
+			name: projectName,
+			position: index % 2 === 0 ? 'left' : 'right',
+			images: urls
+			});
+		});
+
+		
+
+
 
 		const sortedDataArray = Object.entries(sortedData).map(([projectName, images]) => ({
 			projectName: projectName,
@@ -122,7 +136,8 @@ foreach ($projects as $project) {
 		ready({
 			data,
 			sortedData,
-			sortedDataArray
+			sortedDataArray,
+			projectImages
 		});
 	</script>
 </div>

@@ -2,7 +2,13 @@ class CanvasManager {
   constructor(d) {
     this.p5Instance = new p5((p) => {
       this.textures = [];
+      this.textures_org = [];
+      this.textures_dir = {
+        left: [],
+        right: [],
+      };
       this.s = {
+        texMax:undefined,
         raw: 0,
         draw: true,
         current: 0,
@@ -25,10 +31,52 @@ class CanvasManager {
       ];
       this.s.prevOpenTunnel = null;
       // console.log(data);
-      Object.values(d.data).forEach((item) => {
-        const imagePath = Object.values(item)[0];
-        this.textures.push(p.loadImage(imagePath));
+      // Object.values(d.data).forEach((item, index) => {
+      //   const imagePath = Object.values(item)[0];
+      //   this.textures.push(p.loadImage(imagePath));
+      // });
+      Object.values(d.projectImages).forEach((item) => {
+        item.images.forEach((img, index) => {
+          const texture = p.loadImage(img);
+
+          if (item.position === "left") {
+            this.textures_dir.left.push({
+              texture: texture,
+              projectName: item.name,
+              id: item.id,
+              imageIndex: index,
+            });
+          } else if (item.position === "right") {
+            this.textures_dir.right.push({
+              texture: texture,
+              projectName: item.name,
+              id: item.id,
+              imageIndex: index,
+            });
+          }
+        });
       });
+
+      // Object.values(d.projectImages).forEach((item, index) => {
+
+      //   const texs = item.images
+      //     ? item.images
+      //         .map((img) => {
+      //           const loadedImg = p.loadImage(img);
+      //           if (!loadedImg) console.warn("Failed to load image:", img);
+      //           return loadedImg;
+      //         })
+      //         .filter((img) => img !== null)
+      //     : [];
+
+      //   const data = {
+      //     tex: texs,
+      //     position: item.position,
+      //   };
+      //   this.textures_org.push(data);
+      // });
+
+      // console.log(d);
       // console.log( this.textures.length);
 
       p.setup = () => {
@@ -63,7 +111,7 @@ class CanvasManager {
         this.s.base = this.s.raw * (this.sw / 3000);
         this.s.scale = this.sw / 3000;
         // this.c = this._initCamera(p);
-        this.s.visualIndex = this.textures.length - 1;
+        this.s.visualIndex = this.s.texMax - 1;
         p.push();
         p.fill(0);
 
@@ -74,19 +122,93 @@ class CanvasManager {
         this._updateVoletsConfig();
         // p.frameRate(30);
 
-        this.tunnels = this.textures.map((frameTex, idx) => {
+        // const test = this.textures_org.map((frameTex, idx) => {
+        //   return this.VOLETS_CFG.map((cfg, index) => {
+        //     // cfg.ancer = cfg.angle > 0 ? 0 : cfg.wall
+        //     // console.log(cfg);
+        //     //  const tex = cfg.texKind === "merged" ? this.mergedTri : frameTex;
+        //     // return new Volet(p, tex, {
+        //     //   ...cfg,
+        //     //   w: this.sw,
+        //     //   h: this.sh,
+        //     //   z: 0,
+        //     // });
+        //     cfg.ancer = cfg.angle > 0 ? 0 : cfg.wall;
+        //     let tex;
+        //     if (cfg.texKind === "merged") {
+        //       tex = this.mergedTri;
+        //     } else {
+        //       if (cfg.angle == 90 && frameTex.position == "left") {
+        //         console.log(idx, frameTex);
+
+        //         console.log(frameTex.tex[idx]);
+        //         // console.log(frameTex.tex.length <= idx);
+        //       }
+        //     }
+
+        //     // if (cfg.texKind === "frame") {
+        //     // console.log(idx, index);
+        //     if (frameTex.position == "left") tex = frameTex.tex[idx];
+        //     // }
+        //     return new Volet(p, tex, {
+        //       ...cfg,
+        //       w: this.sw,
+        //       h: this.sh,
+        //       z: 0,
+        //     });
+        //   });
+        // });
+        // console.log(test);
+        this.s.texMax = Math.max(
+          this.textures_dir.left.length, 
+          this.textures_dir.right.length
+        );
+
+        this.tunnels = Array.from({length: this.s.texMax}, (_, index) => {
           return this.VOLETS_CFG.map((cfg) => {
             cfg.ancer = cfg.angle > 0 ? 0 : cfg.wall;
-            const tex = cfg.texKind === "merged" ? this.mergedTri : frameTex;
+            let tex;
+            
+            if (cfg.texKind === "merged") {
+              tex = this.mergedTri;
+            } else {
+              // Create colored rectangle texture
+              let g = p.createGraphics(this.sw, this.sh);
+              g.background(255, 0, 0); // Red background
+              
+              if (cfg.angle == 90) {
+                tex = this.textures_dir.left[index]?.texture || g;
+              } else if (cfg.angle == -90) {
+                tex = this.textures_dir.right[index]?.texture || g;
+              }
+            }
+
             return new Volet(p, tex, {
               ...cfg,
               w: this.sw,
               h: this.sh,
-              z: 0,
+              z: 0
             });
           });
         });
-        this.s.prevHoverTunnel = this.tunnels[this.tunnels.length - 1];
+
+        // console.log(mytest);
+        // this.tunnels = this.textures.map((frameTex, idx) => {
+        //   return this.VOLETS_CFG.map((cfg) => {
+        //     cfg.ancer = cfg.angle > 0 ? 0 : cfg.wall;
+        //     const tex = cfg.texKind === "merged" ? this.mergedTri : frameTex;
+        //     return new Volet(p, tex, {
+        //       ...cfg,
+        //       w: this.sw,
+        //       h: this.sh,
+        //       z: 0,
+        //     });
+        //   });
+        // });
+        // console.log(this.textures_org);
+
+        // console.log(test);
+        this.s.prevHoverTunnel = this.tunnels[this.s.texMax - 1];
         // console.log(this.s.prevHoverTunnel);
         this._enterTunnel(this.s.prevHoverTunnel);
       };
@@ -101,7 +223,7 @@ class CanvasManager {
     });
   }
   _draw() {
-    if (!this.s.draw) return ;
+    if (!this.s.draw) return;
     const p = this.p5Instance;
     p.clear();
     p.noStroke();
@@ -121,19 +243,22 @@ class CanvasManager {
           mapX <= Math.max(side.p1, side.p2);
 
         if (isInSide) {
-          const newIndex = this.textures.length - 1 - i;
+          const newIndex = this.s.texMax - 1 - i;
           if (this.s.current !== newIndex) {
-            this.tunnels.forEach(tunnel => {
-              tunnel.filter(volet => volet.isOpen).forEach(volet => volet.close());
+            this.tunnels.forEach((tunnel) => {
+              tunnel
+                .filter((volet) => volet.isOpen)
+                .forEach((volet) => volet.close());
               this.s.draw = true;
             });
             this.s.current = newIndex;
           }
 
-          this.currentTunnel = this.tunnels[i][this.s.inVolet === "left" ? 0 : 1];
+          this.currentTunnel =
+            this.tunnels[i][this.s.inVolet === "left" ? 0 : 1];
           this._openTunnel(this.currentTunnel);
         } else {
-          this.tunnels[i].find(e => e.cfg.texKind === "merged").focus();
+          this.tunnels[i].find((e) => e.cfg.texKind === "merged").focus();
         }
       }
     }
@@ -142,7 +267,6 @@ class CanvasManager {
       this.s.prevOpenTunnel = this.currentTunnel;
       this.s.draw = false;
       this.s.isAnimating = false;
-
     }
   }
 
@@ -183,7 +307,6 @@ class CanvasManager {
         this.s.draw = true;
         this.p5Instance.loop();
       } else {
-         this.p5Instance.noLoop();
         if (Array.isArray(this.tunnels)) {
           this.tunnels.forEach((volet) => {
             volet
@@ -193,6 +316,7 @@ class CanvasManager {
               });
           });
         }
+        this.p5Instance.noLoop();
       }
     };
   }
@@ -243,7 +367,7 @@ class CanvasManager {
     const focused = document.querySelector(
       `.scene a[href="#/${checkProj.projectName}/"]`
     );
-    
+
     const el = document.querySelector(".scene>a.focus");
     // if (focused === el) return;
     el?.classList.remove("focus");
@@ -256,24 +380,27 @@ class CanvasManager {
     });
   }
   setupWheel(p) {
+    let wheelTimeout;
     window.addEventListener(
       "wheel",
       (e) => {
         if (this.s.clickMode) return;
         e.preventDefault();
+        this.p5Instance.loop();
+
+        // Clear previous timeout
+        clearTimeout(wheelTimeout);
+
         // Mise à jour du raw, base et draw
         this.s.raw = Math.max(0, this.s.raw + e.deltaY);
         this.s.base = this.s.raw * this.s.scale;
         this.s.draw = true;
 
         // Calcul du nouvel index et clamp
-        // const step = Math.floor(this.s.base / this.sw*2);
         const step = Math.floor((this.s.base / this.sw) * 2);
-        const clamped = Math.max(0, Math.min(this.textures.length - 1, step));
+        const clamped = Math.max(0, Math.min(this.s.texMax - 1, step));
 
         if (clamped !== this.s.current) {
-          // Fermeture du tunnel précédent
-
           this.s.prevHoverTunnel
             .filter((volet) => volet.cfg.texKind == "frame")
             .forEach((volet) => {
@@ -282,17 +409,21 @@ class CanvasManager {
             });
 
           this.s.current = clamped;
-          this.s.visualIndex = this.textures.length - 1 - clamped;
+          this.s.visualIndex = this.s.texMax - 1 - clamped;
 
           this.s.scrollFrame = this.tunnels[this.s.visualIndex];
           this._enterTunnel(this.s.scrollFrame);
 
           this._enterTunnel(this.s.scrollFrame);
-          // this._getTitle(this.s.visualIndex);
           this.s.prevHoverTunnel = this.s.scrollFrame;
         }
 
-        // this.p5Instance.loop();
+        // Set timeout to detect when scrolling stops
+        wheelTimeout = setTimeout(() => {
+          console.log("Scrolling finished");
+          // Add your code here for when scrolling ends
+          this.p5Instance.noLoop();
+        }, 150); // Adjust timeout value as needed
       },
       { passive: false }
     );
@@ -313,46 +444,38 @@ class CanvasManager {
     const halfSh = this.sh / 2;
 
     for (let idx = 0; idx < this.tunnels.length; idx++) {
-      const z = this.s.base - ((this.textures.length - 1 - idx) * this.sw) / 2;
-      
-      // Early bail if z is too large
-      if (z >= halfSw) continue;
-      
+      const voletList = this.tunnels[idx];
+      const z = this.s.base - ((this.s.texMax - 1 - idx) * this.sw) / 2;
+
       if (z < halfSw) {
-        const voletList = this.tunnels[idx];
-        const vol = [];
-        
-        // Cache screen positions for performance
-        const zeroScreenPos = z > 0 
-          ? { x: halfSw, y: -halfSh }
-          : p.screenPosition(this.sw, 0, 0);
-        
-        for (let i = 0; i < 2; i++) { // Only process first two volets (left/right)
-          const volet = voletList[i];
-          const angle = volet.initialAngle;
-          
-          // Skip middle volet
-          if (angle !== -90 && angle !== 90) continue;
-          
+        let vol = [];
+        for (const volet of voletList) {
           volet.cfg.z = z;
           volet.draw();
-          
+
+          const angle = volet.initialAngle;
+          if (angle !== -90 && angle !== 90) continue;
+
           const isLeftSide = angle === 90;
+          // console.log(volet.cfg.ancer, volet.cfg.w);
           const x = isLeftSide ? 0 : volet.cfg.w;
-          
-          const p1 = z > 0
-            ? { x: isLeftSide ? -halfSw : halfSw, y: -halfSh }
-            : p.screenPosition(x, 0, 0);
-            
+
+          // console.log(z);
+          const p1 =
+            z > 0
+              ? { x: isLeftSide ? -halfSw : halfSw, y: -halfSh }
+              : p.screenPosition(x, 0, 0);
+
           const p2 = p.screenPosition(
+            // x + (isLeftSide ? volet.cfg.w/2 : -volet.cfg.w),
             x + (isLeftSide ? halfSw : -halfSw),
             20,
             0
           );
-          
+
           vol.push({ p1: p1.x, p2: p2.x });
         }
-        
+
         vols.push(vol);
       }
     }
