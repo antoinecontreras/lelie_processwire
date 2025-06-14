@@ -27,7 +27,7 @@ function ready(d) {
     sortedDataArray: sortedDataArray,
   };
   dom.pj.classList.remove("loading");
-  dom.back.addEventListener("click", (e) => {
+  dom.back.addEventListener("click", (e) => {   
     dom.pj.classList.remove("focus");
     CANVAS_LAYER.p5Instance.loop()
     // CANVAS_LAYER.tunnels.forEach((volet) => {
@@ -91,7 +91,7 @@ function ready(d) {
         dom.pages.forEach((el) => el.classList.remove("scrollMode"));
         dom.pj.scrollIntoView(dom.baseScroll);
       }
-    }, 200);
+    }, 400);
   });
 
   // document.addEventListener("")
@@ -104,7 +104,8 @@ function ready(d) {
     dom.baseScroll = canvasRect.top - parentRect.top + dom.pj.scrollTop;
   };
   getProjets = (dom, CANVAS_LAYER) => {
-    const currentValues = Object.values(d.data[CANVAS_LAYER.s.visualIndex])[0];
+    console.log(CANVAS_LAYER.s.visualEl.idx);
+    const currentValues = Object.values(d.data[CANVAS_LAYER.s.visualEl.idx])[0];
     // console.log(currentValues, dom.sortedDataArray);
     const checkProj = dom.sortedDataArray.find((el) =>
       el.images.includes(currentValues)

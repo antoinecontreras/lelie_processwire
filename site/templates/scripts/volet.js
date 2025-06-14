@@ -7,6 +7,7 @@ class Volet {
     this.initialAngle = cfg.angle;
     this.targetAngle = cfg.angle;
     this.animSpeed = 0.4;
+    this.nameProject = cfg.nameProject;
     // opacité
     if (this.cfg.texKind == "frame") {
       this.style = {
