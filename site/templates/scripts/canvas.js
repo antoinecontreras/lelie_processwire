@@ -116,7 +116,6 @@ class CanvasManager {
           this.textures_dir.right.length
         );
         this.s.visualEl.idx = this.s.texMax - 1;
-        this.getCurrentProject(this.s.visualEl, p);
 
         p.push();
         p.fill(0);
@@ -162,25 +161,13 @@ class CanvasManager {
           });
         });
 
-        // console.log(mytest);
-        // this.tunnels = this.textures.map((frameTex, idx) => {
-        //   return this.VOLETS_CFG.map((cfg) => {
-        //     cfg.ancer = cfg.angle > 0 ? 0 : cfg.wall;
-        //     const tex = cfg.texKind === "merged" ? this.mergedTri : frameTex;
-        //     return new Volet(p, tex, {
-        //       ...cfg,
-        //       w: this.sw,
-        //       h: this.sh,
-        //       z: 0,
-        //     });
-        //   });
-        // });
-        // console.log(this.textures_org);
-
         // console.log(test);
         this.s.prevHoverTunnel = this.tunnels[this.s.texMax - 1];
         // console.log(this.s.prevHoverTunnel);
         this._enterTunnel(this.s.prevHoverTunnel);
+        this.s.scrollFrame = this.tunnels[this.tunnels.length - 1];
+        const pNames = this.getCurrentProject(this.s.visualEl, p);
+        if (pNames) this._getTitle(pNames);
       };
 
       p.draw = this._draw.bind(this, p);
@@ -315,22 +302,28 @@ class CanvasManager {
       s.draw = true;
       s.visualEl.idx = this.s.texMax - 1 - s.current;
       // console.log(s.visualEl.idx);
-      const pName = this.getCurrentProject(this.s.visualEl, p);
-      this._getTitle(pName);
+
+
       this.currentTunnel.focus();
 
       if (!s.clickMode && Math.round(this.currentTunnel.cfg.z) === 0) {
         this.currentTunnel.isClicked(90);
         s.clickMode = true;
       } else s.clickMode = false;
+
+            const pNames = this.getCurrentProject(this.s.visualEl, p);
+      if (pNames) this._getTitle(pNames);
     };
   }
-  _getTitle(name) {
-    const focused = document.querySelector(`.scene a[href="#/${name}/"]`);
-    const el = document.querySelector(".scene>a.focus");
-    // if (focused === el) return;
-    el?.classList.remove("focus");
-    focused.classList.add("focus");
+  _getTitle(names) {
+    const l_focused = document.querySelector(`.scene a[href="#/${names.l}/"]`);
+    const r_focused = document.querySelector(`.scene a[href="#/${names.r}/"]`);
+    console.log(names);
+    // const els = document.querySelectorAll(".scene>a.focus");
+    const rProj = document.querySelector(".scene>a.r-project");
+    const lProj = document.querySelector(".scene>a.l-project");
+    rProj.textContent = names.r;
+    lProj.textContent = names.l;
   }
   _enterTunnel(frames) {
     frames.filter((v) => v.cfg.texKind === "frame");
@@ -369,11 +362,11 @@ class CanvasManager {
 
           this.s.current = clamped;
           this.s.visualEl.idx = this.s.texMax - 1 - clamped;
-          this.getCurrentProject(this.s.visualEl, p);
           this.s.scrollFrame = this.tunnels[this.s.visualEl.idx];
+          
           this._enterTunnel(this.s.scrollFrame);
-
-          this._enterTunnel(this.s.scrollFrame);
+          const pNames = this.getCurrentProject(this.s.visualEl, p);
+          if (pNames) this._getTitle(pNames);
           this.s.prevHoverTunnel = this.s.scrollFrame;
         }
 
@@ -389,10 +382,15 @@ class CanvasManager {
   }
   getCurrentProject(el, p) {
     // const proj =  el.proj
+    // console.log(this.s.scrollFrame);
     if (!this.s.scrollFrame) return;
-    const dir =
-      p.mouseX < p.width / 2 ? this.s.scrollFrame[0] : this.s.scrollFrame[1];
-    return dir.cfg.name;
+    const titles = {
+      r: this.s.scrollFrame[0].cfg.name,
+      l: this.s.scrollFrame[1].cfg.name,
+    };
+    // const dir =
+    //   p.mouseX < p.width / 2 ? this.s.scrollFrame[0] : this.s.scrollFrame[1];
+    return titles;
   }
   _animationsRunning() {
     return this.tunnels.some((tunnel) =>

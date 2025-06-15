@@ -74,14 +74,16 @@ foreach ($projects as $project) {
 	</div>
 	<div class="scene">
 		<?php
-		$totalProjects = count($projects);
-		$i = 0;
-		foreach ($projects as $project) :
-			$i++;
-			$class = ($i === $totalProjects) ? ' class="focus"' : '';
+		// $totalProjects = count($projects);
+		// $i = 0;
+		// foreach ($projects as $project) :
+		// 	$i++;
+		// 	$class = ($i === $totalProjects) ? ' class=""' : '';
 		?>
-			<a href="#<?= $project->url ?>" <?= $class ?>><?= $project->title ?></a>
-		<?php endforeach; ?>
+			<a href="#<?= $project->url ?>" class="r-project"><?= $project->title ?></a>
+			<a href="#<?= $project->url ?>" class="l-project"><?= $project->title ?></a>
+		<?php
+		// endforeach; ?>
 
 	</div>
 	<span id="back"></span>

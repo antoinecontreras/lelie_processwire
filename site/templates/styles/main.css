@@ -114,23 +114,24 @@ span#back:hover {
 .scene {
     top: 0;
     position: absolute;
-    width: 100vw;
+    width: calc(100vw - calc(var(--g_margin) / 2));
     display: flex;
-    /* height: calc(100dvh - var(--g_marginHalf)); */
     height: 100dvh;
-    flex-direction: column;
+   flex-direction: row;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     pointer-events: none;
+    padding: 0px calc(var(--g_margin) / 4);
 }
 
 .scene>a {
     pointer-events: all;
-    position: absolute;
-    visibility: hidden;
+    /* position: absolute; */
+    /* visibility: hidden; */
+    /* display: none; */
     color: black;
     margin-bottom: 6px;
-    background: white;
+    background: #f0f0f0;
     text-decoration: none;
     border-radius: 30px;
     padding: 2px 8px;
@@ -138,7 +139,7 @@ span#back:hover {
 }
 
 .scene>a.focus {
-    visibility: visible;
+    display: block;
 }
 
 .projects>.project.loading {
