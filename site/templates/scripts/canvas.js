@@ -21,8 +21,8 @@ class CanvasManager {
         prevOpenTunnel: null,
         inVolet: false,
         clickMode: false,
-        rProj: document.querySelector(".scene>a.r-project"),
         lProj: document.querySelector(".scene>a.l-project"),
+        rProj: document.querySelector(".scene>a.r-project"),
         d: d,
       };
       const styleDatas = [
@@ -285,7 +285,7 @@ class CanvasManager {
       const { s, tunnels, textures } = this;
 
       // Update positions and state
-      // console.log(s.current);
+      console.log(s.current);
 
       // Handle tunnel transitions
       // s.prevHoverTunnel
@@ -302,8 +302,9 @@ class CanvasManager {
       s.raw = (s.current * this.sw) / 2 / s.scale;
       s.base = s.raw * s.scale;
       s.draw = true;
-      s.visualEl.idx = this.s.texMax - 1 - s.current;
+
       // console.log(s.visualEl.idx);
+      s.visualEl.idx = this.s.texMax - 1 - s.current;
 
       this.currentTunnel.focus();
 
@@ -312,6 +313,7 @@ class CanvasManager {
         s.clickMode = true;
       } else s.clickMode = false;
 
+      // console.log(this.currentTunnel, s.current );
       const pNames = this.getCurrentProject(this.s.visualEl, p);
       if (pNames) this._getTitle(pNames);
       if (this.s.clickMode) this._toggleTitle();
@@ -320,16 +322,16 @@ class CanvasManager {
   _getTitle(names) {
     // const rProj = document.querySelector(".scene>a.r-project");
     // const lProj = document.querySelector(".scene>a.l-project");
+    // console.log(names.l);
     this.s.rProj.textContent = names.r;
     this.s.lProj.textContent = names.l;
   }
   _toggleTitle() {
-    console.log(this.s.clickMode);
     if (this.s.clickMode) {
       if (this.p5.mouseX < this.p5.width / 2) {
-        this.s.lProj.style.visibility = "hidden";
-      } else {
         this.s.rProj.style.visibility = "hidden";
+      } else {
+        this.s.lProj.style.visibility = "hidden";
       }
     } else {
       this.s.lProj.style.visibility = "visible";
@@ -396,8 +398,8 @@ class CanvasManager {
     // console.log(this.s.scrollFrame);
     if (!this.s.scrollFrame) return;
     const titles = {
-      r: this.s.scrollFrame[0].cfg.name,
-      l: this.s.scrollFrame[1].cfg.name,
+      l: this.s.scrollFrame[0].cfg.name,
+      r: this.s.scrollFrame[1].cfg.name,
     };
     // const dir =
     //   p.mouseX < p.width / 2 ? this.s.scrollFrame[0] : this.s.scrollFrame[1];

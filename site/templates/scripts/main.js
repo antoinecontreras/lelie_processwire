@@ -106,7 +106,7 @@ function ready(d) {
     dom.baseScroll = canvasRect.top - parentRect.top + dom.pj.scrollTop;
   };
   getProjets = (dom, CANVAS_LAYER) => {
-    console.log(CANVAS_LAYER.s.visualEl.idx);
+    // console.log(CANVAS_LAYER.s.visualEl.idx);
     const currentValues = Object.values(d.data[CANVAS_LAYER.s.visualEl.idx])[0];
     // console.log(currentValues, dom.sortedDataArray);
     const checkProj = dom.sortedDataArray.find((el) =>
