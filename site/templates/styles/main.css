@@ -36,6 +36,7 @@
     --scale: 1;
     --border-thickness: 1px;
     --color-black: rgb(0, 0, 0);
+    --interlignage: calc(var(--font-size) * 1.2);
 }
 
 html {
@@ -63,7 +64,7 @@ body {
 
 p {
     font-size: var(--font-size);
-    line-height: var(--font-size);
+    line-height: var(--interlignage);
     margin: calc(var(--font-size) / 2) 0;
 }
 
@@ -117,7 +118,7 @@ span#back:hover {
     width: calc(100vw - calc(var(--g_margin) / 2));
     display: flex;
     height: 100dvh;
-   flex-direction: row;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
     pointer-events: none;
@@ -156,6 +157,8 @@ span#back:hover {
 
     display: flex;
     overflow: scroll;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
     /* overflow-y: hidden; */
     height: 100dvh;
     flex-direction: column;
@@ -183,7 +186,7 @@ span#back:hover {
     overflow-y: scroll;
     grid-template-columns: 1fr 1fr;
     scroll-snap-align: center;
-    display: flex;
+    display: none;
 
     flex-direction: row;
     position: relative;
@@ -194,10 +197,12 @@ span#back:hover {
     /* pointer-events: none; */
     /* overflow-y: auto;    */
 }
-.project.left{
-justify-content: flex-end;
+
+.project.left {
+    justify-content: flex-end;
 }
-.project .flat-content{
+
+.project .flat-content {
     flex: 0.5;
 }
 
@@ -209,7 +214,7 @@ justify-content: flex-end;
 .project.scrollMode {
     /* pointer-events: all; */
     margin-top: -100vh;
-
+    display: flex;
     /* position: sticky; */
     top: 0;
 }
@@ -224,7 +229,8 @@ justify-content: flex-end;
 
 .first-page {
     height: calc(100dvh - var(--g_margin) / 2);
-
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
     pointer-events: all;
     /* background: rgb(255 255 255 / 85%); */
     background: rgba(255, 255, 255, 0.85);
@@ -233,24 +239,38 @@ justify-content: flex-end;
     display: grid;
     position: relative;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: calc(50vh - .9rem * 7) auto;
+    grid-template-rows: repeat(5, 1fr);
     grid-gap: calc(var(--g_margin) / 4);
-    padding: calc(var(--g_margin) / 4);
+    padding: calc(var(--g_margin) / 4) calc(var(--g_margin) / 2);
 }
 
 .p_header {
     grid-column: span 3 / span 3;
+    padding-top: calc(var(--g_margin) / 2);
+}
+
+.first-page .specs div {
+    height: var(--font-size);
+    margin-bottom: calc(var(--interlignage)/4);
+}
+
+.first-page .specs.p_val div {
+    text-transform: uppercase;
+}
+
+.p_title {
+    margin-bottom: calc(var(--g_margin) / 2);
 }
 
 .p_images {
     grid-column: span 3;
-    grid-row-start: 4;
+    grid-row-start: 5;
     display: grid;
-    /* height: 10%; */
     grid-gap: calc(var(--g_margin) / 4);
-    grid-template-columns: 1fr 1fr 1fr;
-    /* grid-template-rows: 100%; */
-    background: blue;
+    grid-template-columns: repeat(6, 1fr);
+    margin: 0 calc(var(--g_margin) / -4);
+
+    /* background: blue; */
     align-items: end;
 }
 
@@ -261,26 +281,113 @@ justify-content: flex-end;
 }
 
 .v_player {
-    width: 100%;
-    grid-column: span 2 / span 2;
-    grid-row-start: 4;
-    display: flex;
+    white-space: nowrap;
+    font-size: var(--font-size);
+    text-transform: lowercase;
+    display: flex
+;
+    flex-direction: row;
+    align-items: baseline;
+    padding: 0 calc(var(--g_margin) / 4);
+    width: calc(100% - var(--g_margin) / 2);
 }
 
 
 .p_video {
-    grid-column: span 3 / span 3;
-    grid-row-start: 5;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    padding: calc(var(--g_margin) / 4) 0;
+    grid-gap: calc(var(--interlignage) / 2);
 }
 
-.v_player {
-    white-space: nowrap;
+/* .p_video:fullscreen .closeFullscreen {
+  display: block;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+.p_video .closeFullscreen {
+  display: none;
+} */
+.p_video.expanded {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    justify-content: flex-end;
+}
+
+.p_video.expanded video {
+    max-width: 100%;
+    height: 100vh;
+    object-fit: cover;
+}
+
+
+
+.controls {
+    display: flex;
+    /* grid-gap: calc(var(--g_margin)/4); */
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+.controls > div {
+    display: inline-flex;
+}
+.controls button {
+    background: none;
+    border: none;
+    width: calc(var(--g_margin) / 1.75);
+    cursor: pointer;
     font-size: var(--font-size);
     text-transform: lowercase;
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
+    display: flex
+;
+    align-items: center;
+    white-space: nowrap;
+    justify-content: center;
 }
+
+/* Styles par défaut : pas de parenthèses */
+button[data-state="active"]::before {
+    content: "[";
+    color: #7a7a7a;
+    padding-bottom: 1.1px;
+    /* margin-right: -2px; */
+}
+
+button[data-state="active"]::after {
+    content: "]";
+    color: #7a7a7a;
+    padding-bottom: 1.1px;
+    /* margin-left: -2px; */
+}
+
+
+
+/* Cache le contenu HTML, utilise uniquement ::before */
+.playToggle,
+.expandToggle,
+.closeExpand {
+    color: black;
+}
+
+/* .playToggle::before,
+.expandToggle::before,
+.closeExpand::before {
+    display: inline;
+} */
+
+/* .closeExpand {
+    cursor: pointer;
+} */
 
 .dots {
     flex-grow: 1;

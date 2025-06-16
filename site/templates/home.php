@@ -55,14 +55,23 @@ foreach ($projects as $project) {
 
 						</div>
 					</div>
-
 					<div class="image_content p_video">
+						<span class="dots"></span>
+						<video class="v_player" src="<?= $project->video->url ?>" loop muted playsinline></video>
 						<a class="v_player">
-							<span class="">[▶]</span>
-							<span class="dots"></span>
-							<span class="">+</span>
+							<div class="controls">
+								<div class="playControls">
+									<button class="playToggle" data-role="pause" data-state="active">◻︎</button>
+									<button class="playToggle" data-role="play" data-state="inactive">▷</button>
+								</div>
+								<span class="dots"></span>
+								<div class="expandControls">
+									<button class="expandToggle" data-state="inactive">↗</button>
+									<button class="closeExpand" data-state="active">✕</button>
+								</div>
+							</div>
 						</a>
-						<video class="v_player" src="<?= $project->video->url ?>"></video>
+
 					</div>
 
 				</div>
@@ -80,10 +89,11 @@ foreach ($projects as $project) {
 		// 	$i++;
 		// 	$class = ($i === $totalProjects) ? ' class=""' : '';
 		?>
-			<a href="#<?= $project->url ?>" class="l-project"><?= $project->title ?></a>
-			<a href="#<?= $project->url ?>" class="r-project"><?= $project->title ?></a>
+		<a href="#<?= $project->url ?>" class="l-project"><?= $project->title ?></a>
+		<a href="#<?= $project->url ?>" class="r-project"><?= $project->title ?></a>
 		<?php
-		// endforeach; ?>
+		// endforeach; 
+		?>
 
 	</div>
 	<span id="back"></span>
@@ -120,14 +130,14 @@ foreach ($projects as $project) {
 		let projectImages = [];
 		Object.entries(sortedData).forEach(([projectName, urls], index) => {
 			projectImages.push({
-			id: index,
-			name: projectName,
-			position: index % 2 === 0 ? 'left' : 'right',
-			images: urls
+				id: index,
+				name: projectName,
+				position: index % 2 === 0 ? 'left' : 'right',
+				images: urls
 			});
 		});
 
-		
+
 
 
 

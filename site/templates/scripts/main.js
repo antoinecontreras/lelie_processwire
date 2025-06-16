@@ -25,6 +25,7 @@ function ready(d) {
     baseScroll: 0,
     sortedData: sortedData,
     sortedDataArray: sortedDataArray,
+    videoContainers: document.querySelectorAll('.p_video')
   };
   dom.pj.classList.remove("loading");
   dom.back.addEventListener("click", (e) => {
@@ -47,6 +48,75 @@ function ready(d) {
 
     CANVAS_LAYER._toggleTitle();
   });
+
+  // document.querySelectorAll(".expandButton").forEach(button => {
+  //     button.addEventListener("click", function () {
+  //       const container = button.closest(".p_video");
+  //       container.classList.add("expanded");
+  //       container.querySelector("video").play();
+  //       container.querySelector(".closeExpand").style.display = "block";
+  //     });
+  //   });
+
+  //   document.querySelectorAll(".closeExpand").forEach(btn => {
+  //     btn.addEventListener("click", function () {
+  //       const container = btn.closest(".p_video");
+  //       container.classList.remove("expanded");
+  //       btn.style.display = "none";
+  //     });
+  //   });
+
+  // Get all video containers
+
+
+  // For each video container, set up its controls
+  dom.videoContainers.forEach(container => {
+    const video = container.querySelector('video');
+    // Skip if no video element found
+    if (!video) return;
+
+    const playButtons = container.querySelectorAll('.playToggle');
+    const expandButton = container.querySelector('.expandToggle');
+    const closeButton = container.querySelector('.closeExpand');
+
+    // Play/Pause controls
+    playButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Update button states within this container only
+        container.querySelectorAll('.playToggle').forEach(b => 
+          b.dataset.state = 'inactive'
+        );
+        btn.dataset.state = 'active';
+
+        if (btn.dataset.role === 'play') {
+          video.play();
+        } else {
+          video.pause();
+        }
+      });
+    });
+
+    // Expand button
+    expandButton?.addEventListener('click', () => {
+      expandButton.dataset.state = 'active';
+      closeButton.dataset.state = 'inactive';
+      container.classList.add('expanded');
+    });
+
+    // Close button
+    closeButton?.addEventListener('click', () => {
+      closeButton.dataset.state = 'active';
+      expandButton.dataset.state = 'inactive';
+      container.classList.remove('expanded');
+
+      const scrollTarget = container.closest('.project.scrollMode');
+      if (scrollTarget) {
+        const height = scrollTarget.scrollHeight;
+        scrollTarget.scrollTo({ top: height, behavior: 'auto' });
+      }
+    });
+  });
+
   dom.pj.addEventListener("scroll", (e) => {
     if (dom.baseScroll >= e.target.scrollTop) {
       // dom.pj.classList.remove("focus");
@@ -120,9 +190,7 @@ function ready(d) {
     // const checkProj = dom.sortedDataArray.find((el) =>
     //   el.images.includes(currentValues)
     // );
-    const target = document.querySelector(
-      `.projects .project#${dir}`
-    );
+    const target = document.querySelector(`.projects .project#${dir}`);
     console.log(target);
     return target;
   };
