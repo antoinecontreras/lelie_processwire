@@ -27,15 +27,15 @@ function ready(d) {
     sortedDataArray: sortedDataArray,
   };
   dom.pj.classList.remove("loading");
-  dom.back.addEventListener("click", (e) => {   
+  dom.back.addEventListener("click", (e) => {
     dom.pj.classList.remove("focus");
-    CANVAS_LAYER.p5Instance.loop()
+    CANVAS_LAYER.p5.loop();
     // CANVAS_LAYER.tunnels.forEach((volet) => {
-      // volet;
-      // .filter((frame) => frame.isOpen == true)
-      // .forEach((frame) => {
-      //   frame.close();
-      // });
+    // volet;
+    // .filter((frame) => frame.isOpen == true)
+    // .forEach((frame) => {
+    //   frame.close();
+    // });
     // });
     const target = getProjets(dom, CANVAS_LAYER);
     target.scrollTo({ top: 0, behavior: "instant" });
@@ -44,6 +44,8 @@ function ready(d) {
     dom.pages.forEach((el) => el.classList.remove("scrollMode"));
     CANVAS_LAYER.s.draw = true;
     CANVAS_LAYER._draw();
+
+    CANVAS_LAYER._toggleTitle();
   });
   dom.pj.addEventListener("scroll", (e) => {
     if (dom.baseScroll >= e.target.scrollTop) {
@@ -80,7 +82,7 @@ function ready(d) {
         target.classList.add("scrollMode");
         if (target) replaceCanvas(target);
         dom.pj.classList.add("focus");
-        CANVAS_LAYER.p5Instance.noLoop();
+        CANVAS_LAYER.p5.noLoop();
 
         return;
       }

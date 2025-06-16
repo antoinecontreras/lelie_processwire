@@ -127,7 +127,7 @@ span#back:hover {
 .scene>a {
     pointer-events: all;
     /* position: absolute; */
-    /* visibility: hidden; */
+    visibility: visible;
     /* display: none; */
     color: black;
     margin-bottom: 6px;

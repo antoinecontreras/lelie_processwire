@@ -1,6 +1,6 @@
 class CanvasManager {
   constructor(d) {
-    this.p5Instance = new p5((p) => {
+    this.p5 = new p5((p) => {
       this.textures = [];
       this.textures_org = [];
       this.textures_dir = {
@@ -21,6 +21,8 @@ class CanvasManager {
         prevOpenTunnel: null,
         inVolet: false,
         clickMode: false,
+        rProj: document.querySelector(".scene>a.r-project"),
+        lProj: document.querySelector(".scene>a.l-project"),
         d: d,
       };
       const styleDatas = [
@@ -181,7 +183,7 @@ class CanvasManager {
   }
   _draw() {
     if (!this.s.draw) return;
-    const p = this.p5Instance;
+    const p = this.p5;
     p.clear();
     p.noStroke();
 
@@ -262,7 +264,7 @@ class CanvasManager {
         : false;
       if (this.s.inVolet) {
         this.s.draw = true;
-        this.p5Instance.loop();
+        this.p5.loop();
       } else {
         if (Array.isArray(this.tunnels)) {
           this.tunnels.forEach((volet) => {
@@ -273,7 +275,7 @@ class CanvasManager {
               });
           });
         }
-        this.p5Instance.noLoop();
+        this.p5.noLoop();
       }
     };
   }
@@ -303,7 +305,6 @@ class CanvasManager {
       s.visualEl.idx = this.s.texMax - 1 - s.current;
       // console.log(s.visualEl.idx);
 
-
       this.currentTunnel.focus();
 
       if (!s.clickMode && Math.round(this.currentTunnel.cfg.z) === 0) {
@@ -311,19 +312,29 @@ class CanvasManager {
         s.clickMode = true;
       } else s.clickMode = false;
 
-            const pNames = this.getCurrentProject(this.s.visualEl, p);
+      const pNames = this.getCurrentProject(this.s.visualEl, p);
       if (pNames) this._getTitle(pNames);
+      if (this.s.clickMode) this._toggleTitle();
     };
   }
   _getTitle(names) {
-    const l_focused = document.querySelector(`.scene a[href="#/${names.l}/"]`);
-    const r_focused = document.querySelector(`.scene a[href="#/${names.r}/"]`);
-    console.log(names);
-    // const els = document.querySelectorAll(".scene>a.focus");
-    const rProj = document.querySelector(".scene>a.r-project");
-    const lProj = document.querySelector(".scene>a.l-project");
-    rProj.textContent = names.r;
-    lProj.textContent = names.l;
+    // const rProj = document.querySelector(".scene>a.r-project");
+    // const lProj = document.querySelector(".scene>a.l-project");
+    this.s.rProj.textContent = names.r;
+    this.s.lProj.textContent = names.l;
+  }
+  _toggleTitle() {
+    console.log(this.s.clickMode);
+    if (this.s.clickMode) {
+      if (this.p5.mouseX < this.p5.width / 2) {
+        this.s.lProj.style.visibility = "hidden";
+      } else {
+        this.s.rProj.style.visibility = "hidden";
+      }
+    } else {
+      this.s.lProj.style.visibility = "visible";
+      this.s.rProj.style.visibility = "visible";
+    }
   }
   _enterTunnel(frames) {
     frames.filter((v) => v.cfg.texKind === "frame");
@@ -338,7 +349,7 @@ class CanvasManager {
       (e) => {
         if (this.s.clickMode) return;
         e.preventDefault();
-        this.p5Instance.loop();
+        this.p5.loop();
 
         // Clear previous timeout
         clearTimeout(wheelTimeout);
@@ -363,7 +374,7 @@ class CanvasManager {
           this.s.current = clamped;
           this.s.visualEl.idx = this.s.texMax - 1 - clamped;
           this.s.scrollFrame = this.tunnels[this.s.visualEl.idx];
-          
+
           this._enterTunnel(this.s.scrollFrame);
           const pNames = this.getCurrentProject(this.s.visualEl, p);
           if (pNames) this._getTitle(pNames);
@@ -374,7 +385,7 @@ class CanvasManager {
         wheelTimeout = setTimeout(() => {
           console.log("Scrolling finished");
           // Add your code here for when scrolling ends
-          this.p5Instance.noLoop();
+          this.p5.noLoop();
         }, 150); // Adjust timeout value as needed
       },
       { passive: false }
