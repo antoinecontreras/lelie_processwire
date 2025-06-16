@@ -37,7 +37,7 @@ function ready(d) {
     //   frame.close();
     // });
     // });
-    const target = getProjets(dom, CANVAS_LAYER);
+    const target = getProjets(e, dom, CANVAS_LAYER);
     target.scrollTo({ top: 0, behavior: "instant" });
     // target.scrollTo({ top: 0, behavior: "instant" });
     CANVAS_LAYER.s.clickMode = false;
@@ -76,10 +76,11 @@ function ready(d) {
 
       let clickMode = CANVAS_LAYER.s.clickMode;
 
-      const target = getProjets(dom, CANVAS_LAYER);
+      const target = getProjets(e, dom, CANVAS_LAYER, e);
       // if (clickMode && e.target.classList.contains("canvas-container")) {
       if (clickMode && e.target.classList.contains("canvas-container")) {
         target.classList.add("scrollMode");
+
         if (target) replaceCanvas(target);
         dom.pj.classList.add("focus");
         CANVAS_LAYER.p5.noLoop();
@@ -105,16 +106,24 @@ function ready(d) {
     const parentRect = dom.pj.getBoundingClientRect();
     dom.baseScroll = canvasRect.top - parentRect.top + dom.pj.scrollTop;
   };
-  getProjets = (dom, CANVAS_LAYER) => {
+  getProjets = (e, dom, CANVAS_LAYER) => {
     // console.log(CANVAS_LAYER.s.visualEl.idx);
-    const currentValues = Object.values(d.data[CANVAS_LAYER.s.visualEl.idx])[0];
-    // console.log(currentValues, dom.sortedDataArray);
-    const checkProj = dom.sortedDataArray.find((el) =>
-      el.images.includes(currentValues)
-    );
+    let dir = null;
+    if (e.clientX < window.innerWidth / 2) {
+      dir = CANVAS_LAYER.s.pNames.l;
+    } else {
+      dir = CANVAS_LAYER.s.pNames.r;
+    }
+    // console.log(dir);
+    // const currentValues = Object.values(d.data[CANVAS_LAYER.s.visualEl.idx])[0];
+    // // console.log(currentValues, dom.sortedDataArray);
+    // const checkProj = dom.sortedDataArray.find((el) =>
+    //   el.images.includes(currentValues)
+    // );
     const target = document.querySelector(
-      `.projects .project#${checkProj.projectName}`
+      `.projects .project#${dir}`
     );
+    console.log(target);
     return target;
   };
 }

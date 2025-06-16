@@ -283,18 +283,6 @@ class CanvasManager {
     p.mouseClicked = (e) => {
       if (!this.s.inVolet || e.target.id !== "canvasForHTML") return;
       const { s, tunnels, textures } = this;
-
-      // Update positions and state
-      console.log(s.current);
-
-      // Handle tunnel transitions
-      // s.prevHoverTunnel
-      //   ?.filter((v) => v.cfg.texKind === "frame")
-      //   .forEach((v) => {
-      //     v.close();
-      //     v.sleep();
-      //   });
-
       s.scrollFrame = tunnels[s.visualEl.idx];
 
       s.prevHoverTunnel = s.scrollFrame;
@@ -315,14 +303,14 @@ class CanvasManager {
 
       // console.log(this.currentTunnel, s.current );
       const pNames = this.getCurrentProject(this.s.visualEl, p);
-      if (pNames) this._getTitle(pNames);
+      if (pNames) {
+        this._getTitle(pNames);
+        this.s.pNames = pNames;
+      }
       if (this.s.clickMode) this._toggleTitle();
     };
   }
   _getTitle(names) {
-    // const rProj = document.querySelector(".scene>a.r-project");
-    // const lProj = document.querySelector(".scene>a.l-project");
-    // console.log(names.l);
     this.s.rProj.textContent = names.r;
     this.s.lProj.textContent = names.l;
   }
