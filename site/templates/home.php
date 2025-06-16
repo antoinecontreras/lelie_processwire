@@ -95,8 +95,8 @@ foreach ($projects as $project) {
 		// 	$i++;
 		// 	$class = ($i === $totalProjects) ? ' class=""' : '';
 		?>
-		<a href="#<?= $project->url ?>" class="l-project"><?= $project->title ?></a>
-		<a href="#<?= $project->url ?>" class="r-project"><?= $project->title ?></a>
+		<a href="#<?= $project->url ?>" class="ptitle l-project"><?= $project->title ?></a>
+		<a href="#<?= $project->url ?>" class="ptitle r-project"><?= $project->title ?></a>
 		<?php
 		// endforeach; 
 		?>

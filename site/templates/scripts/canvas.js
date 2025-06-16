@@ -21,8 +21,8 @@ class CanvasManager {
         prevOpenTunnel: null,
         inVolet: false,
         clickMode: false,
-        lProj: document.querySelector(".scene>a.l-project"),
-        rProj: document.querySelector(".scene>a.r-project"),
+        lProj: document.querySelector(".scene>.ptitle.l-project"),
+        rProj: document.querySelector(".scene>.ptitle.r-project"),
         d: d,
       };
       const styleDatas = [
@@ -263,9 +263,18 @@ class CanvasManager {
         ? "right"
         : false;
       if (this.s.inVolet) {
+        if(this.s.inVolet =="left") {
+          this.s.lProj.classList.add("active");
+          this.s.rProj.classList.remove("active");
+        } else {
+          this.s.rProj.classList.add("active");
+          this.s.lProj.classList.remove("active");
+        }
         this.s.draw = true;
         this.p5.loop();
       } else {
+        this.s.lProj.classList.remove("active");
+        this.s.rProj.classList.remove("active");
         if (Array.isArray(this.tunnels)) {
           this.tunnels.forEach((volet) => {
             volet
@@ -301,6 +310,8 @@ class CanvasManager {
         s.clickMode = true;
       } else s.clickMode = false;
 
+
+        
       // console.log(this.currentTunnel, s.current );
       const pNames = this.getCurrentProject(this.s.visualEl, p);
       if (pNames) {

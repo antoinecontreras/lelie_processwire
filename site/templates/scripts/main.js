@@ -26,6 +26,7 @@ function ready(d) {
     sortedData: sortedData,
     sortedDataArray: sortedDataArray,
     videoContainers: document.querySelectorAll(".p_video"),
+    imageContents:undefined
   };
   dom.pj.classList.remove("loading");
   dom.back.addEventListener("click", (e) => {
@@ -43,6 +44,7 @@ function ready(d) {
     // target.scrollTo({ top: 0, behavior: "instant" });
     CANVAS_LAYER.s.clickMode = false;
     dom.pages.forEach((el) => el.classList.remove("scrollMode"));
+    dom.back.classList.remove("right")
     CANVAS_LAYER.s.draw = true;
     CANVAS_LAYER._draw();
 
@@ -173,15 +175,20 @@ function ready(d) {
       const target = getProjets(e, dom, CANVAS_LAYER, e);
       // if (clickMode && e.target.classList.contains("canvas-container")) {
       if (clickMode && e.target.classList.contains("canvas-container")) {
+        if (target.classList.contains("right")) dom.back.classList.add("right");
         target.classList.add("scrollMode");
 
         if (target) replaceCanvas(target);
-        const imageContents = target.querySelectorAll(".int_preview");
+        dom.imageContents = target.querySelectorAll(".int_preview");
+        if (dom.imageContents?.length) {
+          [...dom.imageContents].forEach(el => el.classList.remove("active"));
+          dom.imageContents[CANVAS_LAYER.s.visualEl.idx]?.classList.add("active");
+        }
         const previewImages = [...target.querySelectorAll(".images_preview .image_content")];
 
-        if (imageContents.length && previewImages.length) {
+        if (dom.imageContents.length && previewImages.length) {
           const handleHover = (e) => {
-            const index = [...imageContents].indexOf(e.target);
+            const index = [...dom.imageContents].indexOf(e.target);
             if (index >= 0) {
               previewImages[index].style.display = e.type === 'mouseenter' ? 'block' : 'none';
             }

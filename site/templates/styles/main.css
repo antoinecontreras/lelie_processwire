@@ -69,26 +69,29 @@ p {
 }
 
 .projects.focus+.scene+span#back {
-    visibility: visible;
+    display: block;
 }
-
+span#back.right{
+    
+     left: 0px;
+}
 span#back {
-    visibility: hidden;
+    display: none;
+    left: 50%;
     position: fixed;
-    top: calc(var(--g_margin) / 4);
-    left: calc(var(--g_margin) / 4);
-    width: calc(var(--g_margin) / 2);
-    height: calc(var(--g_margin) / 1);
-    background-color: white;
-    border-radius: 14px;
+    top: 0px;
+    
+    width: 50%;
+    height: 100%;
+    background-color: #8924249e;
+    border-radius: 0;
     z-index: 1000;
-    opacity: 0.7;
 }
 
-span#back:hover {
+/* span#back:hover {
     opacity: 1;
     cursor: pointer;
-}
+} */
 
 .home {
 
@@ -125,11 +128,23 @@ span#back:hover {
     padding: 0px calc(var(--g_margin) / 4);
 }
 
-.scene>a {
+.scene>.ptitle {
+    color: black;
+    margin-bottom: 6px;
+    background: #f0f0f0;
+    text-decoration: none;
+    border-radius: 20px;
+    padding: 2px 8px;
+    opacity: 0.2;
+}
+
+.scene>.ptitle.active{
+    opacity: 0.8;
+}
+
+/* .scene>a {
     pointer-events: all;
-    /* position: absolute; */
     visibility: visible;
-    /* display: none; */
     color: black;
     margin-bottom: 6px;
     background: #f0f0f0;
@@ -137,7 +152,7 @@ span#back:hover {
     border-radius: 30px;
     padding: 2px 8px;
     opacity: 0.7;
-}
+} */
 
 .scene>a.focus {
     display: block;
@@ -226,12 +241,14 @@ span#back:hover {
 .project.left .first-page {
     grid-column: 1;
 }
+
 .images_preview .image_content {
     display: none;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
+
 .images_preview {
     flex: 0.5;
     left: 0;
@@ -241,10 +258,14 @@ span#back:hover {
     position: fixed;
 
 }
-.int_preview{
-    opacity: 0.7;
+
+.int_preview {
+    opacity: 0.3;
 }
-.int_preview:hover{
+.int_preview.active{
+    opacity: 1;
+}
+.int_preview:hover {
     opacity: 1;
     cursor: pointer;
 }
@@ -306,8 +327,7 @@ span#back:hover {
     white-space: nowrap;
     font-size: var(--font-size);
     text-transform: lowercase;
-    display: flex
-;
+    display: flex;
     flex-direction: row;
     align-items: baseline;
     padding: 0 calc(var(--g_margin) / 4);
@@ -360,9 +380,11 @@ span#back:hover {
     justify-content: space-between;
     width: 100%;
 }
-.controls > div {
+
+.controls>div {
     display: inline-flex;
 }
+
 .controls button {
     background: none;
     border: none;
@@ -370,8 +392,7 @@ span#back:hover {
     cursor: pointer;
     font-size: var(--font-size);
     text-transform: lowercase;
-    display: flex
-;
+    display: flex;
     align-items: center;
     white-space: nowrap;
     justify-content: center;
