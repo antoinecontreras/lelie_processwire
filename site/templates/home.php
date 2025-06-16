@@ -31,6 +31,12 @@ foreach ($projects as $project) {
 			}
 		?>
 			<div class='project <?= $attribut ?>' id='<?= $project->name ?>'>
+				<div class="images_preview">
+					<?php foreach ($project->gallery as $img) : ?>
+						<img class="image_content" src="<?= $img->url ?>" alt="">
+					<?php endforeach; ?>
+				</div>
+
 				<div class="flat-content">
 					<div class="first-page">
 						<div class="p_header">
@@ -50,7 +56,7 @@ foreach ($projects as $project) {
 						</div>
 						<div class=" p_images">
 							<?php foreach ($project->gallery as $img) : ?>
-								<img class="image_content" src="<?= $img->url ?>" alt="">
+								<img class="int_preview image_content" src="<?= $img->url ?>" alt="">
 							<?php endforeach; ?>
 
 						</div>

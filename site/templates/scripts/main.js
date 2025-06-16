@@ -25,7 +25,7 @@ function ready(d) {
     baseScroll: 0,
     sortedData: sortedData,
     sortedDataArray: sortedDataArray,
-    videoContainers: document.querySelectorAll('.p_video')
+    videoContainers: document.querySelectorAll(".p_video"),
   };
   dom.pj.classList.remove("loading");
   dom.back.addEventListener("click", (e) => {
@@ -68,27 +68,51 @@ function ready(d) {
 
   // Get all video containers
 
-
   // For each video container, set up its controls
-  dom.videoContainers.forEach(container => {
-    const video = container.querySelector('video');
+  dom.videoContainers.forEach((container) => {
+    const video = container.querySelector("video");
     // Skip if no video element found
     if (!video) return;
 
-    const playButtons = container.querySelectorAll('.playToggle');
-    const expandButton = container.querySelector('.expandToggle');
-    const closeButton = container.querySelector('.closeExpand');
+    const playButtons = container.querySelectorAll(".playToggle");
+    const expandButton = container.querySelector(".expandToggle");
+    const closeButton = container.querySelector(".closeExpand");
 
     // Play/Pause controls
-    playButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Update button states within this container only
-        container.querySelectorAll('.playToggle').forEach(b => 
-          b.dataset.state = 'inactive'
-        );
-        btn.dataset.state = 'active';
+    // Video hover interaction for previews
 
-        if (btn.dataset.role === 'play') {
+    // const imageContents = container.querySelectorAll('.images_preview .image_content');
+
+    // console.log(previewImages);
+    // console.log('Found contents:', imageContents.length);
+
+    // previewImages.forEach((preview, index) => {
+    //   preview.addEventListener('mouseenter', (e) => {
+    //     console.log("Mouseenter triggered on", e.target);
+    //   // Hide all images first
+    //   imageContents.forEach(img => img.style.display = 'none');
+    //   // Show the corresponding image
+    //   if (imageContents[index]) {
+    //     imageContents[index].style.display = 'block';
+    //   }
+    //   });
+
+    //   preview.addEventListener('mouseleave', () => {
+    //   // Show first image on mouseleave
+    //   imageContents.forEach((img, i) => {
+    //     img.style.display = i === 0 ? 'block' : 'none';
+    //   });
+    //   });
+    // });
+    playButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        // Update button states within this container only
+        container
+          .querySelectorAll(".playToggle")
+          .forEach((b) => (b.dataset.state = "inactive"));
+        btn.dataset.state = "active";
+
+        if (btn.dataset.role === "play") {
           video.play();
         } else {
           video.pause();
@@ -97,22 +121,22 @@ function ready(d) {
     });
 
     // Expand button
-    expandButton?.addEventListener('click', () => {
-      expandButton.dataset.state = 'active';
-      closeButton.dataset.state = 'inactive';
-      container.classList.add('expanded');
+    expandButton?.addEventListener("click", () => {
+      expandButton.dataset.state = "active";
+      closeButton.dataset.state = "inactive";
+      container.classList.add("expanded");
     });
 
     // Close button
-    closeButton?.addEventListener('click', () => {
-      closeButton.dataset.state = 'active';
-      expandButton.dataset.state = 'inactive';
-      container.classList.remove('expanded');
+    closeButton?.addEventListener("click", () => {
+      closeButton.dataset.state = "active";
+      expandButton.dataset.state = "inactive";
+      container.classList.remove("expanded");
 
-      const scrollTarget = container.closest('.project.scrollMode');
+      const scrollTarget = container.closest(".project.scrollMode");
       if (scrollTarget) {
         const height = scrollTarget.scrollHeight;
-        scrollTarget.scrollTo({ top: height, behavior: 'auto' });
+        scrollTarget.scrollTo({ top: height, behavior: "auto" });
       }
     });
   });
@@ -152,6 +176,21 @@ function ready(d) {
         target.classList.add("scrollMode");
 
         if (target) replaceCanvas(target);
+        const imageContents = target.querySelectorAll(".int_preview");
+        const previewImages = [...target.querySelectorAll(".images_preview .image_content")];
+
+        if (imageContents.length && previewImages.length) {
+          const handleHover = (e) => {
+            const index = [...imageContents].indexOf(e.target);
+            if (index >= 0) {
+              previewImages[index].style.display = e.type === 'mouseenter' ? 'block' : 'none';
+            }
+          };
+
+          target.addEventListener('mouseenter', handleHover, true);
+          target.addEventListener('mouseleave', handleHover, true);
+        }
+        
         dom.pj.classList.add("focus");
         CANVAS_LAYER.p5.noLoop();
 
@@ -191,7 +230,6 @@ function ready(d) {
     //   el.images.includes(currentValues)
     // );
     const target = document.querySelector(`.projects .project#${dir}`);
-    console.log(target);
     return target;
   };
 }
