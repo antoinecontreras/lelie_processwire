@@ -14,6 +14,7 @@
 
 function ready(d) {
   // 1. Instanciation du CanvasManager
+
   let CANVAS_LAYER = new CanvasManager(d);
 
   let dom = {

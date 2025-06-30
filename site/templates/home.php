@@ -9,8 +9,10 @@ $gallery = array();
 foreach ($projects as $project) {
 	if ($project->gallery) {
 		foreach ($project->gallery as $image) {
+			// Redimensionner l'image à une largeur max de 1200px (ou la taille souhaitée)
+			$resized = $image->size(920);
 			array_push($gallery, array(
-				$project->name => $image->url
+				$project->name => $resized->url
 			));
 		}
 	}
@@ -18,6 +20,7 @@ foreach ($projects as $project) {
 ?>
 
 <div id="content">
+	
 	<div class="projects ">
 		<div id="canvasForHTML" class="canvas-container"></div>
 		<?php
@@ -33,7 +36,7 @@ foreach ($projects as $project) {
 			<div class='project <?= $attribut ?>' id='<?= $project->name ?>'>
 				<div class="images_preview">
 					<?php foreach ($project->gallery as $img) : ?>
-						<img class="image_content" src="<?= $img->url ?>" alt="">
+						<img class="image_content" src="<?=  $img->size(920)->url ?>" alt="">
 					<?php endforeach; ?>
 				</div>
 
@@ -87,6 +90,7 @@ foreach ($projects as $project) {
 		endforeach; ?>
 
 	</div>
+	<span id="back"></span>
 	<div class="scene">
 		<?php
 		// $totalProjects = count($projects);
@@ -102,7 +106,7 @@ foreach ($projects as $project) {
 		?>
 
 	</div>
-	<span id="back"></span>
+	
 	<script>
 		<?php
 		$gallery_resized = array();
@@ -110,7 +114,7 @@ foreach ($projects as $project) {
 			if ($project->gallery) {
 				foreach ($project->gallery as $image) {
 					// Resize to max width of 1200px while maintaining aspect ratio
-					$resized = $image->size(720);
+					$resized = $image->size(920);
 					array_push($gallery_resized, array(
 						$project->name => $resized->url
 					));

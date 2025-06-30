@@ -28,6 +28,7 @@ class CanvasManager {
       const styleDatas = [
         ["pointer-events", "none"],
         // ["image-rendering", "pixelated"],
+        ["image-rendering", "initial"],
         ["z-index", "0"],
         ["border-radius", "1.4rem"],
       ];
@@ -40,6 +41,7 @@ class CanvasManager {
       Object.values(d.projectImages).forEach((item) => {
         item.images.forEach((img, index) => {
           const texture = p.loadImage(img);
+          console.log(texture.width);
 
           if (item.position === "left") {
             this.textures_dir.left.push({
@@ -96,6 +98,7 @@ class CanvasManager {
         });
 
         p.clear();
+        p.pixelDensity(1.2);
         p.noLoop();
         this.triangleTextures = this.buildTriangleTextures(p, 0.5);
         this.mergedTri = this.buildMergedTriangle(
@@ -138,7 +141,8 @@ class CanvasManager {
               tex = this.mergedTri;
             } else {
               // Create colored rectangle texture
-              let g = p.createGraphics(this.sw, this.sh);
+              const ratio = 0.3;
+              let g = p.createGraphics(this.sw*ratio, this.sh*ratio);
               g.background(255, 0, 0); // Red background
 
               // console.log(this.textures_dir);

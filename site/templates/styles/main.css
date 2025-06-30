@@ -68,24 +68,23 @@ p {
     margin: calc(var(--font-size) / 2) 0;
 }
 
-.projects.focus+.scene+span#back {
+.projects.focus+span#back {
     display: block;
 }
 span#back.right{
     
-     left: 0px;
+     left: 50dvw;
 }
 span#back {
     display: none;
-    left: 50%;
+    left: 0dvw;
     position: fixed;
     top: 0px;
-    
-    width: 50%;
-    height: 100%;
+    width: 50dvw;
+    height: 100dvh;
     cursor: pointer;
     border-radius: 0;
-    z-index: 1000;
+    z-index: 1000000000;
 }
 
 /* span#back:hover {
@@ -257,6 +256,10 @@ span#back {
     bottom: 0;
     position: fixed;
 
+}
+.right.project .images_preview {
+    right: 0;
+    left: 50%;
 }
 
 .int_preview {
